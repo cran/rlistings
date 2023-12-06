@@ -80,13 +80,16 @@ setGeneric("vec_nlines", function(vec, max_width = NULL) standardGeneric("vec_nl
 #' @param vec A vector.
 #' @keywords internal
 setMethod("vec_nlines", "ANY", function(vec, max_width = NULL) {
-  strvec <- wrap_txt(format_colvector(colvec = vec), max_width = max_width, hard = TRUE)
-  mtchs <- gregexpr("\n", strvec, fixed = TRUE)
-  1L + vapply(mtchs, function(vi) sum(vi > 0), 1L)
+  if (is.null(max_width)) {
+    max_width <- floor(0.9 * getOption("width")) # default of base::strwrap
+    # NB: flooring as it is used as <= (also in base::strwrap)
+  }
+  # in formatters for characters
+  unlist(lapply(format_colvector(colvec = vec), nlines, max_width = max_width))
 })
 
 ## setMethod("vec_nlines", "character", function(vec, max_width = NULL) {
-##     strvec <- wrap_txt(format_colvector(colvec = vec), max_width = max_width, hard = TRUE)
+##     strvec <- wrap_txt(format_colvector(colvec = vec), width = max_width, collapse = "\n")
 ##     mtchs <- gregexpr("\n", strvec, fixed = TRUE)
 ##     1L + vapply(mtchs, function(vi) sum(vi > 0), 1L)
 ## })

@@ -1,7 +1,25 @@
+## rlistings 0.2.7
+* Applied `styler` and resolved package lint. Changed default indentation from 4 spaces to 2.
+* Fixed bug in `add_listing_col` when both a function and a format are specified.
+* Added a vignette on referential footnotes workaround.
+* Added a vignette on formatting columns. 
+* Added a vignette on pagination. 
+
+## rlistings 0.2.6
+* Fixed bug in pagination preventing key column values to appear in paginated listings when `export_as_txt` was used.
+* Added tests to cover for `export_as_txt` outputs.
+* Integrated support for newline characters.
+
+## rlistings 0.2.5
+ * Fixed bug in `as_listing` preventing custom formatting from being applied to key columns.
+ * Updated `matrix_form` to allow `NA` values in key columns.
+ * Updated `as_listing` to trim any rows containing only NA values and print an informative message.
+
 ## rlistings 0.2.4
  * Added `num_rep_cols` method for listings. Resolves error with key column repetition during pagination .
  * Fixed a bug when exporting a degenerative list, which is a data frame of a single row and a single column.
- 
+ * Specified minimal version of package dependencies.
+
 ## rlistings 0.2.3
  * Added new arguments `default_formatting` and `col_formatting` to `as_listing` to specify column format configurations.
  * Added new argument `unique_rows` to `as_listing` to remove duplicate rows from listing.

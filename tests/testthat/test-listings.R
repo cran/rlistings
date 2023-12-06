@@ -240,10 +240,81 @@ testthat::test_that("unique_rows removes duplicate rows from listing", {
   )
   result_strings <- matrix_form(lsting)$strings
   expected_strings <- matrix(
-    c("Planned Arm Code", "ARM A", "", "", "", "ARM B", "", "", "ARM C", "", "", "",
-      "Sex", "M", "F", "UNDIFFERENTIATED", "U", "F", "M", "U", "M", "F", "U", "UNDIFFERENTIATED"),
+    c(
+      "Planned Arm Code", "ARM A", "", "", "", "ARM B", "", "", "ARM C", "", "", "",
+      "Sex", "M", "F", "UNDIFFERENTIATED", "U", "F", "M", "U", "M", "F", "U", "UNDIFFERENTIATED"
+    ),
     ncol = 2,
     dimnames = list(c(), c("ARMCD", "SEX"))
   )
   expect_equal(expected_strings, result_strings)
+})
+
+testthat::test_that("as_listing custom format works in key cols", {
+  lsting <- as_listing(
+    ex_adsl[1:10, ],
+    key_cols = c("AGE", "BMRKR1"),
+    disp_cols = c("SEX", "ARM"),
+    default_formatting = list(all = fmt_config(), numeric = fmt_config(format = "xx.xx"))
+  )
+
+  testthat::expect_identical(matrix_form(lsting)$strings[2, 1:2], c(AGE = "24.00", BMRKR1 = "4.57"))
+  testthat::expect_identical(matrix_form(lsting)$strings[3, 1:2], c(AGE = "", BMRKR1 = "5.00"))
+})
+
+testthat::test_that("as_listing works with NA values in key cols", {
+  mtcars$gear[1:5] <- NA
+  mtcars$carb[6:10] <- NA
+
+  lsting <- as_listing(
+    mtcars,
+    key_cols = c("gear", "carb"),
+    disp_cols = "qsec"
+  )
+
+  testthat::expect_identical(
+    matrix_form(lsting)$strings[29:33, ],
+    matrix(
+      c("NA", "1", "18.61", "", "", "19.44", "", "2", "17.02", "", "4", "16.46", "", "", "17.02"),
+      ncol = 3,
+      byrow = TRUE,
+      dimnames = list(c(), c("gear", "carb", "qsec"))
+    )
+  )
+
+  lsting <- as_listing(
+    mtcars,
+    key_cols = c("gear", "carb"),
+    disp_cols = "qsec",
+    default_formatting = list(all = fmt_config(), numeric = fmt_config(na_str = "<No data>"))
+  )
+
+  testthat::expect_identical(matrix_form(lsting)$strings[29, 1], c(gear = "<No data>"))
+  testthat::expect_identical(matrix_form(lsting)$strings[13, 2], c(carb = "<No data>"))
+
+  mtcars[33, ] <- mtcars[32, ]
+  mtcars[33, c(7, 10:11)] <- NA
+  suppressMessages(testthat::expect_message(lsting <- as_listing(
+    mtcars,
+    key_cols = c("gear", "carb"),
+    disp_cols = "qsec"
+  ), "rows that only contain NA"))
+})
+
+testthat::test_that("add_listing_col works with a function when a format is applied", {
+  suppressMessages(lsting <- as_listing(
+    mtcars[1:5, ],
+    key_cols = c("gear", "carb"),
+    disp_cols = "qsec"
+  ) %>%
+    add_listing_col(
+      "kpg",
+      function(df) df$mpg * 1.60934,
+      format = "xx.xx"
+    ))
+
+  testthat::expect_identical(
+    matrix_form(lsting)$strings[, 4],
+    c("kpg", "34.44", "30.09", "36.69", "33.80", "33.80")
+  )
 })

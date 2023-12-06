@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Emily de la Rua" />
+
+<meta name="date" content="2023-12-06" />
+
+<title>Column Formatting</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Column Formatting</h1>
+<h4 class="author">Emily de la Rua</h4>
+<h4 class="date">2023-12-06</h4>
+
+
+
+<hr />
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This vignette demonstrates how content in columns of a
+<code>listing_df</code> object can be customized using format
+configurations with the <code>rlistings</code> R package.</p>
+<p>The following topics will be covered:</p>
+<ul>
+<li>Adjusting default column formatting settings in
+<code>as_listing</code></li>
+<li>Applying custom formatting to specific columns in
+<code>as_listing</code></li>
+<li>Applying custom formatting settings when adding a new column to a
+listing via <code>add_listing_col</code></li>
+</ul>
+<p>To learn more about how listings are constructed using the
+<code>rlistings</code> package, see the <a href="rlistings.html">Getting
+Started vignette</a>.</p>
+<hr />
+</div>
+<div id="default-formatting-in-as_listing" class="section level2">
+<h2>Default Formatting in <code>as_listing</code></h2>
+<p>When creating a listing with the <code>rlistings</code> package, you
+may want to customize how content is rendered within one or more of your
+listing columns. In this section we will demonstrate how default
+formatting can be set within the <code>as_listing</code> function via
+the <code>default_formatting</code> parameter.</p>
+<p>The <code>default_formatting</code> argument to
+<code>as_listing</code> accepts a named list of format configurations to
+apply within your listing. Format configurations are supplied as
+<code>fmt_config</code> objects which contain 3 elements to control
+formatting:</p>
+<ol style="list-style-type: decimal">
+<li><code>format</code>: A format label (string) or format function to
+apply when rendering values (see all valid options with
+<code>?formatters::list_valid_format_labels()</code>). Defaults to
+<code>NULL</code>.</li>
+<li><code>na_str</code>: A string that should be displayed in place of
+missing values. Defaults to <code>&quot;NA&quot;</code>.</li>
+<li><code>align</code>: Alignment to use when rendering the listing
+column. Defaults to <code>&quot;center&quot;</code>. Other options include
+<code>&quot;left&quot;</code>, <code>&quot;right&quot;</code>, <code>&quot;decimal&quot;</code>,
+<code>&quot;dec_right&quot;</code>, and <code>&quot;dec_left&quot;</code>.</li>
+</ol>
+<p>The <code>default_formatting</code> argument can use the same format
+configuration for all columns in a listing (as is the default), but also
+allows the user to set different format configurations for each data
+class present in your listing. The list supplied to
+<code>default_formatting</code> must contain a named element
+corresponding to every data class present in your listing, or include
+the <code>all</code> element with a configuration that will be applied
+to any data classes that are <em>not</em> explicitly covered.</p>
+<p>To demonstrate, we will create a basic listing below and customize
+formatting using the <code>default_formatting</code> parameter.</p>
+<p>We begin by loading in the <code>rlistings</code> package.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rlistings)</span></code></pre></div>
+<p>For this example, we will use the dummy ADAE dataset provided within
+the <code>formatters</code> package as our data frame, which consists of
+48 columns of adverse event patient data, and one or more rows per
+patient. For the purpose of this example, we will subset the data and
+only use the first 15 records of the dataset. We will create some
+<code>NA</code> values in the data to showcase how <code>NA</code>
+values can be formatted, and sort the data by what will be our key
+columns.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>adae <span class="ot">&lt;-</span> ex_adae[<span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, ]</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>adae <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">lapply</span>(adae, <span class="cf">function</span>(x) <span class="fu">replace</span>(x, <span class="fu">sample</span>(<span class="fu">length</span>(x), <span class="fl">0.1</span> <span class="sc">*</span> <span class="fu">length</span>(x)), <span class="cn">NA</span>)))</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>adae <span class="ot">&lt;-</span> adae <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(USUBJID, AGE, TRTSDTM)</span></code></pre></div>
+<p>Now we will create a basic listing.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>lsting_1 <span class="ot">&lt;-</span> <span class="fu">as_listing</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="at">df =</span> adae,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">key_cols =</span> <span class="fu">c</span>(<span class="st">&quot;USUBJID&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;TRTSDTM&quot;</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">disp_cols =</span> <span class="fu">c</span>(<span class="st">&quot;BMRKR1&quot;</span>, <span class="st">&quot;ASEQ&quot;</span>, <span class="st">&quot;AESEV&quot;</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>lsting_1</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; Unique Subject Identifier   Age   Datetime of First Exposure to Treatment   Continous Level Biomarker 1   Analysis Sequence Number   Severity/Intensity</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; ———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-134      47          2021-06-10 13:26:53.956201               6.46299057842479                    1                    MODERATE     </span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt;                                                                                  6.46299057842479                    3                    MODERATE     </span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt;                             NA          2021-06-10 13:26:53.956201               6.46299057842479                    2                    MODERATE     </span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-141      35          2021-02-28 23:47:16.956201               7.51607612428241                    2                      MILD       </span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt;                                                                                  7.51607612428241                    3                      MILD       </span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt;                                                                                  7.51607612428241                    4                    MODERATE     </span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt;                                                                                  7.51607612428241                    5                      MILD       </span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt;                                                                                         NA                           6                       NA        </span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt;                                                     NA                           7.51607612428241                    1                    MODERATE     </span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-236      32          2021-08-21 18:13:25.956201               7.66300121077566                    1                     SEVERE      </span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt;                                                                                  7.66300121077566                    2                     SEVERE      </span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt;                                                                                  7.66300121077566                    3                     SEVERE      </span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-265      25          2020-05-13 00:38:12.956201                10.323346349886                    NA                   MODERATE     </span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt;                                                                                   10.323346349886                    2                    MODERATE     </span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt;            NA               47          2021-06-10 13:26:53.956201               6.46299057842479                    4                    MODERATE</span></span></code></pre></div>
+<p>Notice that all of the data in the table above is displayed as is,
+with no rounding or formatting applied. All columns are centered and all
+missing values are displayed as <code>&quot;NA&quot;</code>.</p>
+<p>Suppose we want to left align all of the columns in the listing and
+replace missing values with the string <code>&quot;&lt;No data&gt;&quot;</code>.
+This can be done by setting the <code>all</code> element in the list
+supplied to <code>default_formatting</code>, as shown in the following
+example.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>default_fmt <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="at">all =</span> <span class="fu">fmt_config</span>(<span class="at">na_str =</span> <span class="st">&quot;&lt;No data&gt;&quot;</span>, <span class="at">align =</span> <span class="st">&quot;left&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>lsting_2 <span class="ot">&lt;-</span> <span class="fu">as_listing</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">df =</span> adae,</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="at">key_cols =</span> <span class="fu">c</span>(<span class="st">&quot;USUBJID&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;TRTSDTM&quot;</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="at">disp_cols =</span> <span class="fu">c</span>(<span class="st">&quot;BMRKR1&quot;</span>, <span class="st">&quot;ASEQ&quot;</span>, <span class="st">&quot;AESEV&quot;</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="at">default_formatting =</span> default_fmt</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>)</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>lsting_2</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; Unique Subject Identifier      Age      Datetime of First Exposure to Treatment   Continous Level Biomarker 1   Analysis Sequence Number   Severity/Intensity</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-134        47          2021-06-10 13:26:53.956201                6.46299057842479              1                          MODERATE          </span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt;                                                                                   6.46299057842479              3                          MODERATE          </span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;                             &lt;No data&gt;   2021-06-10 13:26:53.956201                6.46299057842479              2                          MODERATE          </span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-141        35          2021-02-28 23:47:16.956201                7.51607612428241              2                          MILD              </span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt;                                                                                   7.51607612428241              3                          MILD              </span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt;                                                                                   7.51607612428241              4                          MODERATE          </span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt;                                                                                   7.51607612428241              5                          MILD              </span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt;                                                                                   &lt;No data&gt;                     6                          &lt;No data&gt;         </span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt;                                         &lt;No data&gt;                                 7.51607612428241              1                          MODERATE          </span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-236        32          2021-08-21 18:13:25.956201                7.66300121077566              1                          SEVERE            </span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt;                                                                                   7.66300121077566              2                          SEVERE            </span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt;                                                                                   7.66300121077566              3                          SEVERE            </span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-265        25          2020-05-13 00:38:12.956201                10.323346349886               &lt;No data&gt;                  MODERATE          </span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt;                                                                                   10.323346349886               2                          MODERATE          </span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt; &lt;No data&gt;                   47          2021-06-10 13:26:53.956201                6.46299057842479              4                          MODERATE</span></span></code></pre></div>
+<p>Now consider that we would like to display our numeric columns with
+two decimal places and then align these columns on the decimal point.
+This can be done by adding a <code>&quot;numeric&quot;</code> element to the
+<code>default_formatting</code> list as follows:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>default_fmt <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">all =</span> <span class="fu">fmt_config</span>(<span class="at">na_str =</span> <span class="st">&quot;&lt;No data&gt;&quot;</span>, <span class="at">align =</span> <span class="st">&quot;left&quot;</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">numeric =</span> <span class="fu">fmt_config</span>(<span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>, <span class="at">na_str =</span> <span class="st">&quot;&lt;No data&gt;&quot;</span>, <span class="at">align =</span> <span class="st">&quot;decimal&quot;</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>)</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>lsting_3 <span class="ot">&lt;-</span> <span class="fu">as_listing</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="at">df =</span> adae,</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="at">key_cols =</span> <span class="fu">c</span>(<span class="st">&quot;USUBJID&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;TRTSDTM&quot;</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="at">disp_cols =</span> <span class="fu">c</span>(<span class="st">&quot;BMRKR1&quot;</span>, <span class="st">&quot;ASEQ&quot;</span>, <span class="st">&quot;AESEV&quot;</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="at">default_formatting =</span> default_fmt</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>)</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>lsting_3</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; Unique Subject Identifier      Age      Datetime of First Exposure to Treatment   Continous Level Biomarker 1   Analysis Sequence Number   Severity/Intensity</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-134          47.00     2021-06-10 13:26:53.956201                            6.46                        1.00             MODERATE          </span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt;                                                                                               6.46                        3.00             MODERATE          </span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt;                             &lt;No data&gt;   2021-06-10 13:26:53.956201                            6.46                        2.00             MODERATE          </span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-141          35.00     2021-02-28 23:47:16.956201                            7.52                        2.00             MILD              </span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                        3.00             MILD              </span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                        4.00             MODERATE          </span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                        5.00             MILD              </span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt;                                                                                            &lt;No data&gt;                      6.00             &lt;No data&gt;         </span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt;                                         &lt;No data&gt;                                             7.52                        1.00             MODERATE          </span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-236          32.00     2021-08-21 18:13:25.956201                            7.66                        1.00             SEVERE            </span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.66                        2.00             SEVERE            </span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.66                        3.00             SEVERE            </span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-265          25.00     2020-05-13 00:38:12.956201                           10.32                     &lt;No data&gt;           MODERATE          </span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt;                                                                                              10.32                        2.00             MODERATE          </span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt; &lt;No data&gt;                     47.00     2021-06-10 13:26:53.956201                            6.46                        4.00             MODERATE</span></span></code></pre></div>
+<p>Along with the format strings listed by
+<code>formatters::list_valid_format_labels</code>, we can also specify a
+format <em>function</em> to allow for more customized formats in our
+listing. In the following example, we will define and apply a custom
+format function to format date (<code>POSIXt</code> class) columns in
+our listing.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Custom format function - takes date format as input</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>date_fmt <span class="ot">&lt;-</span> <span class="cf">function</span>(fmt) {</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="cf">function</span>(x, ...) <span class="fu">do.call</span>(format, <span class="fu">list</span>(<span class="at">x =</span> x, fmt))</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>}</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>default_fmt <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="at">all =</span> <span class="fu">fmt_config</span>(<span class="at">na_str =</span> <span class="st">&quot;&lt;No data&gt;&quot;</span>, <span class="at">align =</span> <span class="st">&quot;left&quot;</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="at">numeric =</span> <span class="fu">fmt_config</span>(<span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>, <span class="at">na_str =</span> <span class="st">&quot;&lt;No data&gt;&quot;</span>, <span class="at">align =</span> <span class="st">&quot;decimal&quot;</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="at">POSIXt =</span> <span class="fu">fmt_config</span>(<span class="at">format =</span> <span class="fu">date_fmt</span>(<span class="st">&quot;%B %d, %Y @ %I:%M %p %Z&quot;</span>), <span class="at">na_str =</span> <span class="st">&quot;&lt;No data&gt;&quot;</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>)</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>lsting_4 <span class="ot">&lt;-</span> <span class="fu">as_listing</span>(</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>  <span class="at">df =</span> adae,</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>  <span class="at">key_cols =</span> <span class="fu">c</span>(<span class="st">&quot;USUBJID&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;TRTSDTM&quot;</span>),</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>  <span class="at">disp_cols =</span> <span class="fu">c</span>(<span class="st">&quot;BMRKR1&quot;</span>, <span class="st">&quot;ASEQ&quot;</span>, <span class="st">&quot;AESEV&quot;</span>),</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  <span class="at">default_formatting =</span> default_fmt</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>)</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>lsting_4</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; Unique Subject Identifier      Age      Datetime of First Exposure to Treatment   Continous Level Biomarker 1   Analysis Sequence Number   Severity/Intensity</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-134          47.00          June 10, 2021 @ 01:26 PM UTC                     6.46                        1.00             MODERATE          </span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt;                                                                                               6.46                        3.00             MODERATE          </span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt;                             &lt;No data&gt;        June 10, 2021 @ 01:26 PM UTC                     6.46                        2.00             MODERATE          </span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-141          35.00        February 28, 2021 @ 11:47 PM UTC                   7.52                        2.00             MILD              </span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                        3.00             MILD              </span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                        4.00             MODERATE          </span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                        5.00             MILD              </span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co">#&gt;                                                                                            &lt;No data&gt;                      6.00             &lt;No data&gt;         </span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt;                                                        &lt;No data&gt;                              7.52                        1.00             MODERATE          </span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-236          32.00         August 21, 2021 @ 06:13 PM UTC                    7.66                        1.00             SEVERE            </span></span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.66                        2.00             SEVERE            </span></span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.66                        3.00             SEVERE            </span></span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-265          25.00           May 13, 2020 @ 12:38 AM UTC                    10.32                     &lt;No data&gt;           MODERATE          </span></span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a><span class="co">#&gt;                                                                                              10.32                        2.00             MODERATE          </span></span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="co">#&gt; &lt;No data&gt;                     47.00          June 10, 2021 @ 01:26 PM UTC                     6.46                        4.00             MODERATE</span></span></code></pre></div>
+<p>In the output above, the <code>all</code> format configuration, which
+originally applied to all columns in the listing, now only applies to
+the two character/factor variables (<code>USUBJID</code> and
+<code>AESEV</code>). This is because all other data classes in the
+listing have been covered by other elements in the list provided to
+<code>default_formatting</code>. When format configurations are supplied
+to a listing, any other applicable configuration take precedence over
+the <code>all</code> format configuration.</p>
+</div>
+<div id="column-wise-formatting-in-as_listing" class="section level2">
+<h2>Column-Wise Formatting in <code>as_listing</code></h2>
+<p>In this section, we will demonstrate how custom formatting can be
+applied on a column-by-column basis rather than to all columns of a
+specified data class or an entire listing at once.</p>
+<p>Take, for example, <code>lsting_4</code> created in the previous
+section.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>lsting_4</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; Unique Subject Identifier      Age      Datetime of First Exposure to Treatment   Continous Level Biomarker 1   Analysis Sequence Number   Severity/Intensity</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-134          47.00          June 10, 2021 @ 01:26 PM UTC                     6.46                        1.00             MODERATE          </span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;                                                                                               6.46                        3.00             MODERATE          </span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;                             &lt;No data&gt;        June 10, 2021 @ 01:26 PM UTC                     6.46                        2.00             MODERATE          </span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-141          35.00        February 28, 2021 @ 11:47 PM UTC                   7.52                        2.00             MILD              </span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                        3.00             MILD              </span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                        4.00             MODERATE          </span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                        5.00             MILD              </span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;                                                                                            &lt;No data&gt;                      6.00             &lt;No data&gt;         </span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt;                                                        &lt;No data&gt;                              7.52                        1.00             MODERATE          </span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-236          32.00         August 21, 2021 @ 06:13 PM UTC                    7.66                        1.00             SEVERE            </span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.66                        2.00             SEVERE            </span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.66                        3.00             SEVERE            </span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-265          25.00           May 13, 2020 @ 12:38 AM UTC                    10.32                     &lt;No data&gt;           MODERATE          </span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt;                                                                                              10.32                        2.00             MODERATE          </span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt; &lt;No data&gt;                     47.00          June 10, 2021 @ 01:26 PM UTC                     6.46                        4.00             MODERATE</span></span></code></pre></div>
+<p>This listing applies the same format configuration to all numeric
+columns. But in some cases, this may not produce the result we want. In
+the above listing, the “Age” and “Analysis Sequence Number” columns
+contain only integer values, so we would like to <em>not</em> render
+these columns with two decimal places and instead only apply the current
+numeric format configuration to the “Continuous Level Biomarker 1”
+column. To do so, we make use of the <code>col_formatting</code>
+argument to <code>as_listing</code>. Like
+<code>default_formatting</code>, this argument takes a named list of
+format configurations (<code>fmt_config</code> objects) as input, but
+unlike <code>default_formatting</code> the names of the list elements
+correspond to column names. The <code>col_formatting</code> argument can
+be used in combination with the <code>default_formatting</code> argument
+or on its own, and for any number of columns present in your listing,
+depending on your requirements.</p>
+<p>See the following example which demonstrates how
+<code>col_formatting</code> can be used with the <code>BMRKR1</code>
+column. We will use the <code>&quot;xx&quot;</code> format and right alignment for
+the two remaining numeric columns.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>default_fmt <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="at">all =</span> <span class="fu">fmt_config</span>(<span class="at">na_str =</span> <span class="st">&quot;&lt;No data&gt;&quot;</span>, <span class="at">align =</span> <span class="st">&quot;left&quot;</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="at">numeric =</span> <span class="fu">fmt_config</span>(<span class="at">format =</span> <span class="st">&quot;xx&quot;</span>, <span class="at">na_str =</span> <span class="st">&quot;&lt;No data&gt;&quot;</span>, <span class="at">align =</span> <span class="st">&quot;right&quot;</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="at">POSIXt =</span> <span class="fu">fmt_config</span>(<span class="at">format =</span> <span class="fu">date_fmt</span>(<span class="st">&quot;%B %d, %Y @ %I:%M %p %Z&quot;</span>), <span class="at">na_str =</span> <span class="st">&quot;&lt;No data&gt;&quot;</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>col_fmt <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="at">BMRKR1 =</span> <span class="fu">fmt_config</span>(<span class="at">format =</span> <span class="st">&quot;xx.xx&quot;</span>, <span class="at">na_str =</span> <span class="st">&quot;&lt;No data&gt;&quot;</span>, <span class="at">align =</span> <span class="st">&quot;decimal&quot;</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>)</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>lsting_5 <span class="ot">&lt;-</span> <span class="fu">as_listing</span>(</span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>  <span class="at">df =</span> adae,</span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>  <span class="at">key_cols =</span> <span class="fu">c</span>(<span class="st">&quot;USUBJID&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;TRTSDTM&quot;</span>),</span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>  <span class="at">disp_cols =</span> <span class="fu">c</span>(<span class="st">&quot;BMRKR1&quot;</span>, <span class="st">&quot;ASEQ&quot;</span>, <span class="st">&quot;AESEV&quot;</span>),</span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>  <span class="at">default_formatting =</span> default_fmt,</span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>  <span class="at">col_formatting =</span> col_fmt</span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>)</span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>lsting_5</span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; Unique Subject Identifier      Age      Datetime of First Exposure to Treatment   Continous Level Biomarker 1   Analysis Sequence Number   Severity/Intensity</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-134               47        June 10, 2021 @ 01:26 PM UTC                     6.46                                     1   MODERATE          </span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt;                                                                                               6.46                                     3   MODERATE          </span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt;                             &lt;No data&gt;        June 10, 2021 @ 01:26 PM UTC                     6.46                                     2   MODERATE          </span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-141               35      February 28, 2021 @ 11:47 PM UTC                   7.52                                     2   MILD              </span></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                                     3   MILD              </span></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                                     4   MODERATE          </span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                                     5   MILD              </span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt;                                                                                            &lt;No data&gt;                                   6   &lt;No data&gt;         </span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt;                                                        &lt;No data&gt;                              7.52                                     1   MODERATE          </span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-236               32       August 21, 2021 @ 06:13 PM UTC                    7.66                                     1   SEVERE            </span></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.66                                     2   SEVERE            </span></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.66                                     3   SEVERE            </span></span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-265               25         May 13, 2020 @ 12:38 AM UTC                    10.32                             &lt;No data&gt;   MODERATE          </span></span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="co">#&gt;                                                                                              10.32                                     2   MODERATE          </span></span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="co">#&gt; &lt;No data&gt;                          47        June 10, 2021 @ 01:26 PM UTC                     6.46                                     4   MODERATE</span></span></code></pre></div>
+<p>Now all of the columns present in our listing are formatted according
+to our specifications. Note that format configurations supplied to
+<code>col_formatting</code> for individual columns take precedence over
+any format configurations from <code>default_formatting</code>.</p>
+</div>
+<div id="adding-formatted-columns-to-a-listing-via-add_listing_col" class="section level2">
+<h2>Adding Formatted Columns to a Listing via
+<code>add_listing_col</code></h2>
+<p>In some cases, you may want to add a new column with its own
+formatting settings to a pre-existing listing. In this section, we will
+demonstrate how this can be accomplished using the
+<code>add_listing_col</code>. Columns added after a listing has already
+been created with <code>as_listing</code> will not inherit format
+configurations previously applied, so formatting for the new column must
+be specified <em>within</em> the <code>add_listing_col</code> function.
+Instead of creating a <code>fmt_config</code> object, the
+<code>format</code>, <code>na_str</code>, and <code>align</code>
+specifications are supplied directly to <code>add_listing_col</code>
+using its the parameters by the same names. If these parameters are not
+specified, default values of <code>NULL</code>, <code>&quot;NA&quot;</code>, and
+<code>&quot;left&quot;</code> will be used as <code>format</code>,
+<code>na_str</code>, and <code>align</code>, respectively. The
+<code>add_listing_col</code> can be used in sequence as many times as
+needed to add new columns to a listing.</p>
+<p>In this example, we will add a column to <code>lsting_5</code>
+created in the previous section. This new column will calculates the
+length of the analysis (in days) by subtracting “Analysis Start Relative
+Day” (<code>ASTDY</code>) from “Analysis End Relative Day”
+(<code>AENDY</code>). This can be done as follows:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>lsting_6 <span class="ot">&lt;-</span> lsting_5 <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">add_listing_col</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Length of</span><span class="sc">\n</span><span class="st">Analysis&quot;</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>    <span class="at">fun =</span> <span class="cf">function</span>(df) df<span class="sc">$</span>AENDY <span class="sc">-</span> df<span class="sc">$</span>ASTDY,</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>    <span class="at">format =</span> <span class="st">&quot;xx.x&quot;</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>    <span class="at">na_str =</span> <span class="st">&quot;NE&quot;</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">&quot;center&quot;</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  )</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>lsting_6</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt;                                                                                                                                                                 Length of</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; Unique Subject Identifier      Age      Datetime of First Exposure to Treatment   Continous Level Biomarker 1   Analysis Sequence Number   Severity/Intensity   Analysis </span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; —————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-134               47        June 10, 2021 @ 01:26 PM UTC                     6.46                                     1   MODERATE               267.0  </span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt;                                                                                               6.46                                     3   MODERATE               228.0  </span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt;                             &lt;No data&gt;        June 10, 2021 @ 01:26 PM UTC                     6.46                                     2   MODERATE               255.0  </span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-141               35      February 28, 2021 @ 11:47 PM UTC                   7.52                                     2   MILD                   420.0  </span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                                     3   MILD                   23.0   </span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                                     4   MODERATE               93.0   </span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.52                                     5   MILD                   43.0   </span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co">#&gt;                                                                                            &lt;No data&gt;                                   6   &lt;No data&gt;               NE    </span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="co">#&gt;                                                        &lt;No data&gt;                              7.52                                     1   MODERATE                7.0   </span></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-236               32       August 21, 2021 @ 06:13 PM UTC                    7.66                                     1   SEVERE                 410.0  </span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.66                                     2   SEVERE                 517.0  </span></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="co">#&gt;                                                                                               7.66                                     3   SEVERE                  4.0   </span></span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a><span class="co">#&gt; AB12345-BRA-1-id-265               25         May 13, 2020 @ 12:38 AM UTC                    10.32                             &lt;No data&gt;   MODERATE               44.0   </span></span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a><span class="co">#&gt;                                                                                              10.32                                     2   MODERATE               162.0  </span></span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a><span class="co">#&gt; &lt;No data&gt;                          47        June 10, 2021 @ 01:26 PM UTC                     6.46                                     4   MODERATE                NE</span></span></code></pre></div>
+<hr />
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>In this vignette, you have learned how column formatting can be
+configured using the <code>default_formatting</code> and
+<code>col_formatting</code> arguments to <code>as_listing</code> and the
+<code>add_listing_col</code> function to customize how listings are
+rendered.</p>
+<p><strong>For more information please explore the <a href="https://insightsengineering.github.io/rlistings/main/">rlistings
+website</a>.</strong></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
