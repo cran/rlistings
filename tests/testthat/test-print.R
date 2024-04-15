@@ -18,6 +18,7 @@ testthat::test_that("Listing print correctly with different widths", {
 
   testthat::expect_snapshot(cat(toString(matrix_form(lsting), widths = c(7, 8, 9), hsep = "-")))
 })
+
 testthat::test_that("as_listing produces correct output when default_formatting is specified", {
   anl$BMRKR1[3:6] <- NA
   lsting <- as_listing(
@@ -55,8 +56,7 @@ testthat::test_that("as_listing produces correct output when default_formatting 
       "To cover all remaining columns please add an ",
       "'all' configuration to `default_formatting`."
     )
-  ) %>%
-    suppressMessages()
+  )
 })
 
 testthat::test_that("as_listing produces correct output when col_formatting is specified", {
@@ -128,6 +128,10 @@ testthat::test_that("listings support newline characters", {
       ARM = fmt_config(format = sprintf_format("ARM #: %s"), na_str = "-\nasd\n", align = "left")
     )
   )
+  main_footer(lsting) <- c("main_footer: argh\nasr", "sada\n")
+  prov_footer(lsting) <- c("prov_footer: argh\nasr", "sada\n")
+  main_title(lsting) <- "main_title: argh\nasr"
+  subtitles(lsting) <- c("subtitle: argh\nasr", "sada\n")
 
   res <- strsplit(toString(matrix_form(lsting), hsep = "-"), "\\n")[[1]]
   testthat::expect_snapshot(res)

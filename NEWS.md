@@ -1,14 +1,24 @@
+## rlistings 0.2.8
+ * Added relevant tests for pagination when key columns need to be repeated in each page and when they are all empty.
+ * Added relevant tests for new line characters' handling in footnotes and titles.
+ * Added a cheatsheet.
+ * Added function `split_into_pages_by_var` to split a listing into a list of listings according to values of a given 
+   variable. This enables page splits by variable when paginating.
+ * Removed defunct function `pag_listing_indices`.
+ * Changed title of "Getting Started with rlistings" vignette to "Getting Started".
+ * Refactored `paginate_listing` to use directly `paginate_to_mpfs` function from `formatters` package.
+
 ## rlistings 0.2.7
-* Applied `styler` and resolved package lint. Changed default indentation from 4 spaces to 2.
-* Fixed bug in `add_listing_col` when both a function and a format are specified.
-* Added a vignette on referential footnotes workaround.
-* Added a vignette on formatting columns. 
-* Added a vignette on pagination. 
+ * Applied `styler` and resolved package lint. Changed default indentation from 4 spaces to 2.
+ * Fixed bug in `add_listing_col` when both a function and a format are specified.
+ * Added a vignette on referential footnotes workaround.
+ * Added a vignette on formatting columns.
+ * Added a vignette on pagination.
 
 ## rlistings 0.2.6
-* Fixed bug in pagination preventing key column values to appear in paginated listings when `export_as_txt` was used.
-* Added tests to cover for `export_as_txt` outputs.
-* Integrated support for newline characters.
+ * Fixed bug in pagination preventing key column values to appear in paginated listings when `export_as_txt` was used.
+ * Added tests to cover for `export_as_txt` outputs.
+ * Integrated support for newline characters.
 
 ## rlistings 0.2.5
  * Fixed bug in `as_listing` preventing custom formatting from being applied to key columns.
@@ -27,7 +37,7 @@
  * Introduced `testthat` edition 3.
 
 ## rlistings 0.2.2
- * Moved `export_as_txt` to `formatters`. Added to reexports. 
+ * Moved `export_as_txt` to `formatters`. Added to reexports.
 
 ## rlistings 0.2.1
 

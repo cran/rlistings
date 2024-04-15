@@ -4,28 +4,25 @@
 \alias{matrix_form,listing_df-method}
 \title{Transform \code{rtable} to a list of matrices which can be used for outputting}
 \usage{
-\S4method{matrix_form}{listing_df}(obj, indent_rownames = FALSE)
+\S4method{matrix_form}{listing_df}(obj, indent_rownames = FALSE, expand_newlines = TRUE)
 }
 \arguments{
-\item{obj}{ANY. Object to be transformed into a ready-to-render form (a \code{MatrixPrintForm} object)}
+\item{obj}{(\code{ANY})\cr object to be transformed into a ready-to-render form (a \code{\link[formatters]{MatrixPrintForm}} object).}
 
-\item{indent_rownames}{logical(1). Silently ignored, as listings do not have row names
+\item{indent_rownames}{(\code{flag})\cr silently ignored, as listings do not have row names
 nor indenting structure.}
+
+\item{expand_newlines}{(\code{flag})\cr this should always be \code{TRUE} for listings. We keep it
+for debugging reasons.}
 }
 \value{
-a \code{MatrixPrintForm} object
+a \code{\link{MatrixPrintForm}} object.
 }
 \description{
-Although \code{rtables} are represented as a tree data structure when outputting the table to ASCII or HTML it is
-useful to map the \code{rtable} to an in between state with the formatted cells in a matrix form.
-}
-\details{
-The strings in the return object are defined as follows: row labels are those determined by \code{summarize_rows} and
-cell values are determined using \code{get_formatted_cells}.
-(Column labels are calculated using a non-exported internal function.
+Although \code{rtable}s are represented as a tree data structure when outputting the table to ASCII or HTML,
+it is useful to map the \code{rtable} to an in-between state with the formatted cells in a matrix form.
 }
 \examples{
-
 lsting <- as_listing(mtcars)
 mf <- matrix_form(lsting)
 

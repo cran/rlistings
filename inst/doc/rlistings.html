@@ -14,7 +14,7 @@
 
 <meta name="date" content="2022-10-26" />
 
-<title>Getting Started with rlistings</title>
+<title>Getting Started</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -338,7 +338,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Getting Started with rlistings</h1>
+<h1 class="title toc-ignore">Getting Started</h1>
 <h4 class="author">Emily de la Rua and Gabriel Becker</h4>
 <h4 class="date">2022-10-26</h4>
 
@@ -483,26 +483,25 @@ readability.</p>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">disp_cols =</span> <span class="fu">c</span>(<span class="st">&quot;ARM&quot;</span>, <span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;AEDECOD&quot;</span>, <span class="st">&quot;AESEV&quot;</span>),</span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">key_cols =</span> <span class="fu">c</span>(<span class="st">&quot;USUBJID&quot;</span>, <span class="st">&quot;AETOXGR&quot;</span>)</span>
 <span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>)</span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; sorting incoming data by key columns</span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="fu">head</span>(lsting, <span class="dv">15</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; Unique Subject Identifier   Analysis Toxicity Grade   Description of Planned Arm   Age   Sex             Race              Dictionary-Derived Term   Severity/Intensity</span></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; ———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-134                 2                      A: Drug X            47     M              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt;                                                               A: Drug X            47     M              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt;                                        3                      A: Drug X            47     M              WHITE                  dcd B.2.1.2.1             MODERATE     </span></span>
-<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt;                                                               A: Drug X            47     M              WHITE                  dcd D.1.1.4.2             MODERATE     </span></span>
-<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-141                 1                    C: Combination         35     F              WHITE                  dcd D.2.1.5.3               MILD       </span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="fu">head</span>(lsting, <span class="dv">15</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; Unique Subject Identifier   Analysis Toxicity Grade   Description of Planned Arm   Age   Sex             Race              Dictionary-Derived Term   Severity/Intensity</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; ———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-134                 2                      A: Drug X            47     M              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt;                                                               A: Drug X            47     M              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt;                                        3                      A: Drug X            47     M              WHITE                  dcd B.2.1.2.1             MODERATE     </span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt;                                                               A: Drug X            47     M              WHITE                  dcd D.1.1.4.2             MODERATE     </span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-141                 1                    C: Combination         35     F              WHITE                  dcd D.2.1.5.3               MILD       </span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt;                                                             C: Combination         35     F              WHITE                  dcd A.1.1.1.1               MILD       </span></span>
 <span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt;                                                             C: Combination         35     F              WHITE                  dcd A.1.1.1.1               MILD       </span></span>
-<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt;                                                             C: Combination         35     F              WHITE                  dcd A.1.1.1.1               MILD       </span></span>
-<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt;                                        2                    C: Combination         35     F              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
-<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt;                                        3                    C: Combination         35     F              WHITE                  dcd B.2.1.2.1             MODERATE     </span></span>
-<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt;                                        5                    C: Combination         35     F              WHITE                  dcd D.1.1.1.1              SEVERE      </span></span>
-<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-236                 5                      B: Placebo           32     M    BLACK OR AFRICAN AMERICAN        dcd B.1.1.1.1              SEVERE      </span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt;                                        2                    C: Combination         35     F              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt;                                        3                    C: Combination         35     F              WHITE                  dcd B.2.1.2.1             MODERATE     </span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt;                                        5                    C: Combination         35     F              WHITE                  dcd D.1.1.1.1              SEVERE      </span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-236                 5                      B: Placebo           32     M    BLACK OR AFRICAN AMERICAN        dcd B.1.1.1.1              SEVERE      </span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt;                                                               B: Placebo           32     M    BLACK OR AFRICAN AMERICAN        dcd B.1.1.1.1              SEVERE      </span></span>
 <span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt;                                                               B: Placebo           32     M    BLACK OR AFRICAN AMERICAN        dcd B.1.1.1.1              SEVERE      </span></span>
-<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt;                                                               B: Placebo           32     M    BLACK OR AFRICAN AMERICAN        dcd B.1.1.1.1              SEVERE      </span></span>
-<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-265                 2                    C: Combination         25     M              WHITE                  dcd C.2.1.2.1             MODERATE     </span></span>
-<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt;                                        3                    C: Combination         25     M              WHITE                  dcd D.1.1.4.2             MODERATE</span></span></code></pre></div>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-265                 2                    C: Combination         25     M              WHITE                  dcd C.2.1.2.1             MODERATE     </span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt;                                        3                    C: Combination         25     M              WHITE                  dcd D.1.1.4.2             MODERATE</span></span></code></pre></div>
 </div>
 <div id="titles-and-footers" class="section level2">
 <h2>Titles and Footers</h2>
@@ -523,39 +522,38 @@ in the following updated listing.</p>
 <span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="at">main_footer =</span> <span class="fu">c</span>(<span class="st">&quot;Main Footer A&quot;</span>, <span class="st">&quot;Main Footer B&quot;</span>, <span class="st">&quot;Main Footer C&quot;</span>),</span>
 <span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="at">prov_footer =</span> <span class="fu">c</span>(<span class="st">&quot;Provenance Footer A&quot;</span>, <span class="st">&quot;Provenance Footer B&quot;</span>)</span>
 <span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>)</span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; sorting incoming data by key columns</span></span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="fu">head</span>(lsting, <span class="dv">15</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; Main Title</span></span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; Subtitle A</span></span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; Subtitle B</span></span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; ———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
-<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; Unique Subject Identifier   Analysis Toxicity Grade   Description of Planned Arm   Age   Sex             Race              Dictionary-Derived Term   Severity/Intensity</span></span>
-<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; ———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
-<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-134                 2                      A: Drug X            47     M              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
-<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt;                                                               A: Drug X            47     M              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
-<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt;                                        3                      A: Drug X            47     M              WHITE                  dcd B.2.1.2.1             MODERATE     </span></span>
-<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt;                                                               A: Drug X            47     M              WHITE                  dcd D.1.1.4.2             MODERATE     </span></span>
-<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-141                 1                    C: Combination         35     F              WHITE                  dcd D.2.1.5.3               MILD       </span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="fu">head</span>(lsting, <span class="dv">15</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; Main Title</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; Subtitle A</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; Subtitle B</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; ———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; Unique Subject Identifier   Analysis Toxicity Grade   Description of Planned Arm   Age   Sex             Race              Dictionary-Derived Term   Severity/Intensity</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; ———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-134                 2                      A: Drug X            47     M              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt;                                                               A: Drug X            47     M              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt;                                        3                      A: Drug X            47     M              WHITE                  dcd B.2.1.2.1             MODERATE     </span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt;                                                               A: Drug X            47     M              WHITE                  dcd D.1.1.4.2             MODERATE     </span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-141                 1                    C: Combination         35     F              WHITE                  dcd D.2.1.5.3               MILD       </span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt;                                                             C: Combination         35     F              WHITE                  dcd A.1.1.1.1               MILD       </span></span>
 <span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt;                                                             C: Combination         35     F              WHITE                  dcd A.1.1.1.1               MILD       </span></span>
-<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt;                                                             C: Combination         35     F              WHITE                  dcd A.1.1.1.1               MILD       </span></span>
-<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt;                                        2                    C: Combination         35     F              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
-<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt;                                        3                    C: Combination         35     F              WHITE                  dcd B.2.1.2.1             MODERATE     </span></span>
-<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co">#&gt;                                        5                    C: Combination         35     F              WHITE                  dcd D.1.1.1.1              SEVERE      </span></span>
-<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-236                 5                      B: Placebo           32     M    BLACK OR AFRICAN AMERICAN        dcd B.1.1.1.1              SEVERE      </span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt;                                        2                    C: Combination         35     F              WHITE                  dcd A.1.1.1.2             MODERATE     </span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt;                                        3                    C: Combination         35     F              WHITE                  dcd B.2.1.2.1             MODERATE     </span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt;                                        5                    C: Combination         35     F              WHITE                  dcd D.1.1.1.1              SEVERE      </span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-236                 5                      B: Placebo           32     M    BLACK OR AFRICAN AMERICAN        dcd B.1.1.1.1              SEVERE      </span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt;                                                               B: Placebo           32     M    BLACK OR AFRICAN AMERICAN        dcd B.1.1.1.1              SEVERE      </span></span>
 <span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="co">#&gt;                                                               B: Placebo           32     M    BLACK OR AFRICAN AMERICAN        dcd B.1.1.1.1              SEVERE      </span></span>
-<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a><span class="co">#&gt;                                                               B: Placebo           32     M    BLACK OR AFRICAN AMERICAN        dcd B.1.1.1.1              SEVERE      </span></span>
-<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-265                 2                    C: Combination         25     M              WHITE                  dcd C.2.1.2.1             MODERATE     </span></span>
-<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a><span class="co">#&gt;                                        3                    C: Combination         25     M              WHITE                  dcd D.1.1.4.2             MODERATE     </span></span>
-<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a><span class="co">#&gt; ———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
-<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a><span class="co">#&gt; Main Footer A</span></span>
-<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a><span class="co">#&gt; Main Footer B</span></span>
-<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a><span class="co">#&gt; Main Footer C</span></span>
-<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a><span class="co">#&gt; Provenance Footer A</span></span>
-<span id="cb6-42"><a href="#cb6-42" tabindex="-1"></a><span class="co">#&gt; Provenance Footer B</span></span></code></pre></div>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a><span class="co">#&gt;   AB12345-BRA-1-id-265                 2                    C: Combination         25     M              WHITE                  dcd C.2.1.2.1             MODERATE     </span></span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="co">#&gt;                                        3                    C: Combination         25     M              WHITE                  dcd D.1.1.4.2             MODERATE     </span></span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a><span class="co">#&gt; ———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————</span></span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="co">#&gt; Main Footer A</span></span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a><span class="co">#&gt; Main Footer B</span></span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a><span class="co">#&gt; Main Footer C</span></span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a><span class="co">#&gt; Provenance Footer A</span></span>
+<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a><span class="co">#&gt; Provenance Footer B</span></span></code></pre></div>
 <hr />
 </div>
 <div id="summary" class="section level2">
