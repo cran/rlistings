@@ -1,7 +1,7 @@
 Package: rlistings
 Title: Clinical Trial Style Data Readout Listings
-Version: 0.2.8
-Date: 2024-04-04
+Version: 0.2.9
+Date: 2024-06-11
 Authors@R: c(
     person("Gabriel", "Becker", , "gabembecker@gmail.com", role = "aut",
            comment = "original creator of the package"),
@@ -20,10 +20,10 @@ License: Apache License 2.0
 URL: https://insightsengineering.github.io/rlistings/,
         https://github.com/insightsengineering/rlistings/
 BugReports: https://github.com/insightsengineering/rlistings/issues
-Depends: formatters (>= 0.5.6), methods, tibble (>= 2.0.0)
+Depends: formatters (>= 0.5.8), methods, tibble (>= 2.0.0)
 Imports: checkmate (>= 2.1.0), grDevices, grid, stats, utils
-Suggests: dplyr (>= 1.0.1), knitr (>= 1.42), lifecycle (>= 0.2.0),
-        rmarkdown (>= 2.19), stringi (>= 1.6), testthat (>= 3.1.5),
+Suggests: dplyr (>= 1.0.2), knitr (>= 1.42), lifecycle (>= 0.2.0),
+        rmarkdown (>= 2.23), stringi (>= 1.6), testthat (>= 3.1.5),
         withr (>= 2.0.0)
 VignetteBuilder: knitr
 Config/Needs/verdepcheck: insightsengineering/formatters,
@@ -36,7 +36,7 @@ Encoding: UTF-8
 Language: en-US
 RoxygenNote: 7.3.1
 NeedsCompilation: no
-Packaged: 2024-04-15 08:33:43 UTC; rstudio
+Packaged: 2024-06-20 08:14:20 UTC; rstudio
 Author: Gabriel Becker [aut] (original creator of the package),
   Adrian Waddell [aut],
   Joe Zhu [aut, cre],
@@ -46,4 +46,4 @@ Author: Gabriel Becker [aut] (original creator of the package),
   F. Hoffmann-La Roche AG [cph, fnd]
 Maintainer: Joe Zhu <joe.zhu@roche.com>
 Repository: CRAN
-Date/Publication: 2024-04-15 09:50:02 UTC
+Date/Publication: 2024-06-20 10:20:03 UTC
