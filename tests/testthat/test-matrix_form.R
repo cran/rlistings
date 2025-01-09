@@ -1,4 +1,7 @@
 testthat::test_that("matrix_form keeps relevant information and structure about the listing", {
+  skip_if_not_installed("dplyr")
+  require("dplyr", quietly = TRUE)
+
   my_iris <- iris %>%
     slice(c(16, 3)) %>%
     mutate("fake_rownames" = c("mean", "mean"))
@@ -37,4 +40,32 @@ testthat::test_that("matrix_form keeps relevant information and structure about 
   testthat::expect_equal(ncol(rlmf), length(rlmf$col_widths))
   testthat::expect_equal(ncol(rlmf), ncol(rlmf$strings))
   testthat::expect_false(mf_has_rlabels(rlmf))
+})
+
+test_that("matrix_form detects { or } in labels and sends meaningful error message", {
+  dat <- ex_adae[1:10, ]
+  dat$AENDY[3:6] <- "something {haha} something"
+  lsting <- as_listing(
+    dat,
+    key_cols = c("USUBJID"),
+    disp_cols = c("STUDYID", "AENDY")
+  )
+  expect_error(
+    matrix_form(lsting),
+    "Labels cannot contain"
+  )
+
+  # Workaround for ref_fnotes works
+  levels(dat$ARM)[1] <- "A: Drug X(1)"
+
+  # Generate listing
+  lsting <- as_listing(
+    df = dat,
+    key_cols = c("ARM"),
+    disp_cols = c("BMRKR1"),
+    main_footer = "(1) adasdasd"
+  )
+
+  expect_true(grepl(toString(lsting), pattern = "\\(1\\) adasdasd"))
+  expect_true(grepl(toString(lsting), pattern = "A: Drug X\\(1\\)"))
 })

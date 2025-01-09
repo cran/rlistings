@@ -104,66 +104,6 @@
       cat(pages_listings)
     Output
       title
-      Patient Subset - Sex: M
-      
-      —————————————————————————————————————
-      Unique Subject Identifier   Age   Sex
-      —————————————————————————————————————
-        AB12345-BRA-1-id-134      47     M 
-                                         M 
-                                         M 
-                                         M 
-        AB12345-BRA-1-id-236      32     M 
-                                         M 
-                                         M 
-        AB12345-BRA-1-id-265      25     M 
-                                         M 
-                                         M 
-                                         M 
-         AB12345-BRA-1-id-42      36     M 
-                                         M 
-                                         M 
-                                         M 
-                                         M 
-                                         M 
-                                         M 
-                                         M 
-                                         M 
-                                         M 
-      —————————————————————————————————————
-      
-      foot
-      \s\ntitle
-      Patient Subset - Sex: M
-      
-      —————————————————————————————————————————————————————————————
-      Unique Subject Identifier   Age   Continous Level Biomarker 1
-      —————————————————————————————————————————————————————————————
-        AB12345-BRA-1-id-134      47    6.5                        
-                                        6.5                        
-                                        6.5                        
-                                        6.5                        
-        AB12345-BRA-1-id-236      32    7.7                        
-                                        7.7                        
-                                        7.7                        
-        AB12345-BRA-1-id-265      25    10.3                       
-                                        10.3                       
-                                        10.3                       
-                                        10.3                       
-         AB12345-BRA-1-id-42      36    2.3                        
-                                        2.3                        
-                                        2.3                        
-                                        2.3                        
-                                        2.3                        
-                                        2.3                        
-                                        2.3                        
-                                        2.3                        
-                                        2.3                        
-                                        2.3                        
-      —————————————————————————————————————————————————————————————
-      
-      foot
-      \s\ntitle
       Patient Subset - Sex: F
       
       —————————————————————————————————————
@@ -257,4 +197,106 @@
       —————————————————————————————————————————————————————————————
       
       foot
+      \s\ntitle
+      Patient Subset - Sex: M
+      
+      —————————————————————————————————————
+      Unique Subject Identifier   Age   Sex
+      —————————————————————————————————————
+        AB12345-BRA-1-id-134      47     M 
+                                         M 
+                                         M 
+                                         M 
+        AB12345-BRA-1-id-236      32     M 
+                                         M 
+                                         M 
+        AB12345-BRA-1-id-265      25     M 
+                                         M 
+                                         M 
+                                         M 
+         AB12345-BRA-1-id-42      36     M 
+                                         M 
+                                         M 
+                                         M 
+                                         M 
+                                         M 
+                                         M 
+                                         M 
+                                         M 
+                                         M 
+      —————————————————————————————————————
+      
+      foot
+      \s\ntitle
+      Patient Subset - Sex: M
+      
+      —————————————————————————————————————————————————————————————
+      Unique Subject Identifier   Age   Continous Level Biomarker 1
+      —————————————————————————————————————————————————————————————
+        AB12345-BRA-1-id-134      47    6.5                        
+                                        6.5                        
+                                        6.5                        
+                                        6.5                        
+        AB12345-BRA-1-id-236      32    7.7                        
+                                        7.7                        
+                                        7.7                        
+        AB12345-BRA-1-id-265      25    10.3                       
+                                        10.3                       
+                                        10.3                       
+                                        10.3                       
+         AB12345-BRA-1-id-42      36    2.3                        
+                                        2.3                        
+                                        2.3                        
+                                        2.3                        
+                                        2.3                        
+                                        2.3                        
+                                        2.3                        
+                                        2.3                        
+                                        2.3                        
+                                        2.3                        
+      —————————————————————————————————————————————————————————————
+      
+      foot
+
+# export_as_txt works with empty listings
+
+    Code
+      cat(res)
+    Output
+                                                                                           
+      —————————————————————————————————————————————————————————————————————————————————————
+      Null Report: No observations met the reporting criteria for inclusion in this output.
+
+# export_as_txt works with listings with all key cols
+
+    Code
+      cat(res)
+    Output
+      Categorical Level Biomarker 2   Medication Class   Standardized Medication Name
+      ———————————————————————————————————————————————————————————————————————————————
+                   LOW                    medcl A               medname A_1/3        
+                                                                medname A_2/3        
+                                                                medname A_3/3        
+                                          medcl B               medname B_1/4        
+                                                                medname B_2/4        
+                                                                medname B_3/4        
+                                                                medname B_4/4        
+                                          medcl C               medname C_1/2        
+                                                                medname C_2/2        
+                 MEDIUM                   medcl A               medname A_2/3        
+                                                                medname A_3/3        
+                                          medcl B               medname B_1/4        
+                                                                medname B_2/4        
+                                                                medname B_3/4        
+                                                                medname B_4/4        
+                                          medcl C               medname C_1/2        
+                                                                medname C_2/2        
+                  HIGH                    medcl A               medname A_1/3        
+                                                                medname A_2/3        
+                                                                medname A_3/3        
+                                          medcl B               medname B_1/4        
+                                                                medname B_2/4        
+                                                                medname B_3/4        
+                                                                medname B_4/4        
+                                          medcl C               medname C_2/2        
 

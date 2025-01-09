@@ -1,4 +1,7 @@
 testthat::test_that("pagination works vertically", {
+  skip_if_not_installed("dplyr")
+  require("dplyr", quietly = TRUE)
+
   # pre-processing and ordering
   tmp_data <- ex_adae %>%
     dplyr::slice(1:30) %>%
@@ -22,6 +25,9 @@ testthat::test_that("pagination works vertically", {
 })
 
 testthat::test_that("horizontal pagination with 0 or 1 key column specified works correctly", {
+  skip_if_not_installed("dplyr")
+  require("dplyr", quietly = TRUE)
+
   # pre-processing and ordering
   tmp_data <- ex_adae %>%
     dplyr::slice(1:30) %>%
@@ -84,6 +90,9 @@ testthat::test_that("horizontal pagination with 0 or 1 key column specified work
 })
 
 testthat::test_that("listing works with no vertical pagination", {
+  skip_if_not_installed("dplyr")
+  require("dplyr", quietly = TRUE)
+
   # pre-processing and ordering
   tmp_data <- ex_adae %>%
     dplyr::slice(1:30) %>%
@@ -104,6 +113,9 @@ testthat::test_that("listing works with no vertical pagination", {
 })
 
 testthat::test_that("checking vertical pagination line calculation.", {
+  skip_if_not_installed("dplyr")
+  require("dplyr", quietly = TRUE)
+
   # pre-processing and ordering
   tmp_data <- ex_adae %>%
     dplyr::slice(1:30) %>%
@@ -308,11 +320,14 @@ testthat::test_that("paginate_listing works with split_into_pages_by_var", {
     add_listing_col("BMRKR1", format = "xx.x") %>%
     split_into_pages_by_var("SEX", page_prefix = "Patient Subset - Sex")
 
+  # split keeps the order of the levels
+  expect_equal(names(lsting), levels(tmp_data$SEX)[seq(2)])
+
   pag_listing <- paginate_listing(lsting, lpp = 20, cpp = 65, print_pages = FALSE)[[3]]
   testthat::expect_equal(main_title(pag_listing), "title")
-  testthat::expect_equal(subtitles(pag_listing), "Patient Subset - Sex: F")
+  testthat::expect_equal(subtitles(pag_listing), "Patient Subset - Sex: M")
   testthat::expect_equal(main_footer(pag_listing), "foot")
-  testthat::expect_true(all(pag_listing$strings[-1, 3] == "F"))
+  testthat::expect_true(all(pag_listing$strings[-1, 3] == "M"))
   testthat::expect_snapshot(fast_print(list(pag_listing)))
 
   # This works also for the pagination print

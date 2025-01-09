@@ -330,7 +330,7 @@ testthat::test_that("split_into_pages_by_var works as expected", {
     split_into_pages_by_var("SEX", page_prefix = "Patient Subset - Sex")
 
   testthat::expect_equal(length(lsting), length(unique(tmp_data[["SEX"]])))
-  testthat::expect_equal(subtitles(lsting[[1]]), "Patient Subset - Sex: M")
+  testthat::expect_equal(subtitles(lsting[[1]]), "Patient Subset - Sex: F")
 
   lsting <- as_listing(
     tmp_data,
@@ -349,4 +349,18 @@ testthat::test_that("split_into_pages_by_var works as expected", {
     split_into_pages_by_var = "SEX"
   )
   testthat::expect_identical(lsting, lsting_id)
+})
+
+testthat::test_that("appropriate error message returned for 'difftime' class", {
+  tmp_data <- ex_adae[1:100, ]
+  class(tmp_data$study_duration_secs) <- "difftime"
+
+  testthat::expect_error(as_listing(
+    tmp_data,
+    key_cols = c("USUBJID", "AGE"),
+    disp_cols = "study_duration_secs",
+    main_title = "title",
+    main_footer = "foot"
+  ) %>%
+    split_into_pages_by_var("SEX", page_prefix = "Patient Subset - Sex"))
 })

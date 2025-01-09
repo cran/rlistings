@@ -6,8 +6,6 @@
 \alias{rlistings-package}
 \title{rlistings: Clinical Trial Style Data Readout Listings}
 \description{
-\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
-
 Listings are often part of the submission of clinical trial data in regulatory settings. We provide a framework for the specific formatting features often used when displaying large datasets in that context.
 }
 \seealso{
@@ -20,18 +18,18 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Joe Zhu \email{joe.zhu@roche.com}
+\strong{Maintainer}: Joe Zhu \email{joe.zhu@roche.com} (\href{https://orcid.org/0000-0001-7566-2787}{ORCID})
 
 Authors:
 \itemize{
   \item Gabriel Becker \email{gabembecker@gmail.com} (original creator of the package)
   \item Adrian Waddell \email{adrian.waddell@gene.com}
+  \item Davide Garolini \email{davide.garolini@roche.com}
+  \item Emily de la Rua \email{emily.de_la_rua@contractors.roche.com}
 }
 
 Other contributors:
 \itemize{
-  \item Davide Garolini \email{davide.garolini@roche.com} [contributor]
-  \item Emily de la Rua \email{emily.de_la_rua@contractors.roche.com} [contributor]
   \item Abinaya Yogasekaram \email{abinaya.yogasekaram@contractors.roche.com} [contributor]
   \item F. Hoffmann-La Roche AG [copyright holder, funder]
 }

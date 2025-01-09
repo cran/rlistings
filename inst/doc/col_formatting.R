@@ -1,11 +1,19 @@
 ## ----include = FALSE----------------------------------------------------------
+suggested_dependent_pkgs <- c("dplyr")
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = all(vapply(
+    suggested_dependent_pkgs,
+    requireNamespace,
+    logical(1),
+    quietly = TRUE
+  ))
 )
 
 ## ----message=FALSE------------------------------------------------------------
 library(rlistings)
+require(dplyr)
 
 ## -----------------------------------------------------------------------------
 adae <- ex_adae[1:15, ]

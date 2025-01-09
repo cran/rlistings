@@ -1,11 +1,19 @@
 ## ----include = FALSE----------------------------------------------------------
+suggested_dependent_pkgs <- c("dplyr")
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = all(vapply(
+    suggested_dependent_pkgs,
+    requireNamespace,
+    logical(1),
+    quietly = TRUE
+  ))
 )
 
 ## ----message=FALSE------------------------------------------------------------
 library(rlistings)
+library(dplyr)
 
 ## -----------------------------------------------------------------------------
 adae <- ex_adae[1:30, ]
@@ -30,8 +38,8 @@ df_lbls <- var_labels(adae)
 # Specify order of levels with new referential footnotes added
 adae <- adae %>% dplyr::mutate(
   ARM = factor(
-    ifelse(ARM == "A: Drug X" & ASEQ %in% 1:2, paste0(ARM, "*"), as.character(ARM)),
-    levels = c(sapply(levels(adae$ARM), paste0, c("", "*")))
+    ifelse(ARM == "A: Drug X" & ASEQ %in% 1:2, paste0(ARM, " (1)"), as.character(ARM)),
+    levels = c(sapply(levels(adae$ARM), paste0, c("", "(1)")))
   )
 )
 
@@ -43,6 +51,7 @@ lsting <- as_listing(
   df = adae,
   key_cols = c("ARM", "USUBJID", "ASEQ", "ASTDY"),
   disp_cols = c("BMRKR1", "AESEV"),
+  main_footer = "(1)   ASEQ 1 or 2"
 )
 
 lsting
