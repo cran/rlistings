@@ -13,14 +13,14 @@ testthat::test_that("pagination works vertically", {
   ) %>%
     add_listing_col("BMRKR1", format = "xx.x")
 
-  pages_listings <- suppressMessages(paginate_listing(lsting, lpp = 4, verbose = TRUE, print_pages = FALSE))
+  pages_listings <- suppressMessages(paginate_listing(lsting, lpp = 6, verbose = TRUE, print_pages = FALSE))
 
   testthat::expect_snapshot(fast_print(pages_listings[c(1, 2)]))
 
   lsting2 <- lsting %>% add_listing_col("BMRKR2")
-  pages_listings2 <- paginate_listing(lsting2, lpp = 4, cpp = 70, print_pages = FALSE)
+  pages_listings2 <- paginate_listing(lsting2, lpp = 6, cpp = 70, print_pages = FALSE)
 
-  testthat::expect_equal(length(pages_listings2), 6L)
+  testthat::expect_equal(length(pages_listings2), 4L)
   testthat::expect_snapshot(fast_print(pages_listings2[c(1, 6)]))
 })
 
@@ -218,7 +218,7 @@ testthat::test_that("pagination repeats keycols in other pages", {
 
   # Simplified test
   mf_pages <- as_listing(tibble("a" = rep("1", 25), "b" = seq(25)), key_cols = "a") %>%
-    paginate_to_mpfs(lpp = 10)
+    paginate_to_mpfs(lpp = 12)
 
   testthat::expect_snapshot(cat(toString(mf_pages[[3]])))
 
@@ -226,12 +226,12 @@ testthat::test_that("pagination repeats keycols in other pages", {
   mf_pages <- suppressWarnings(
     testthat::expect_warning(
       as_listing(tibble("a" = rep("", 25), "b" = seq(25)), key_cols = "a") %>%
-        paginate_to_mpfs(lpp = 10)
+        paginate_to_mpfs(lpp = 12)
     )
   )
   mf_pages <- suppressWarnings(
     as_listing(tibble("a" = rep("", 25), "b" = seq(25)), key_cols = "a") %>%
-      paginate_to_mpfs(lpp = 10)
+      paginate_to_mpfs(lpp = 12)
   )
 
   testthat::expect_snapshot(
@@ -239,17 +239,38 @@ testthat::test_that("pagination repeats keycols in other pages", {
   )
 })
 
+
+testthat::test_that("pagination repeats keycols in other pages (longer test)", {
+  dat <- ex_adae
+  lsting <- as_listing(dat[1:50, c(1:6, 40)],
+    key_cols = c("USUBJID", "AESOC"),
+    main_title = "Example Title for Listing",
+    subtitles = "This is the subtitle for this Adverse Events Table",
+    main_footer = "Main footer for the listing",
+    prov_footer = c(
+      "You can even add a subfooter", "Second element is place on a new line",
+      "Third string"
+    )
+  )
+
+  lst <- lsting %>% export_as_txt(tf_wrap = TRUE, lpp = 30, page_break = "\f")
+  testthat::expect_snapshot(
+    cat(toString(lst))
+  )
+})
+
+
 testthat::test_that("paginate_to_mpfs works with wrapping on keycols", {
   iris2 <- iris[1:10, 3:5]
   iris2$Species <- "SOMETHING VERY LONG THAT BREAKS PAGINATION"
 
   lst <- as_listing(iris2, key_cols = c("Species", "Petal.Width"))
 
-  pgs <- paginate_to_mpfs(lst, colwidths = c(30, 11, 12), lpp = 5)
+  pgs <- paginate_to_mpfs(lst, colwidths = c(30, 11, 12), lpp = 7)
 
   testthat::expect_equal(
     sapply(pgs, function(x) strsplit(toString(x), "\n")[[1]] %>% length()),
-    rep(5, 5)
+    c(7, 7, 5)
   )
   testthat::expect_snapshot(null <- sapply(pgs, function(x) toString(x) %>% cat()))
 
@@ -332,4 +353,50 @@ testthat::test_that("paginate_listing works with split_into_pages_by_var", {
 
   # This works also for the pagination print
   testthat::expect_snapshot(paginate_listing(lsting, lpp = 330, cpp = 365, print_pages = TRUE))
+})
+
+testthat::test_that("paginate_listing works with split_into_pages_by_var and trailing_sep", {
+  tmp_data <- ex_adae[1:30, ]
+
+  lsting <- as_listing(
+    tmp_data,
+    key_cols = "ARM",
+    disp_cols = c("SEX", "USUBJID", "AGE"),
+    add_trailing_sep = "ARM",
+    trailing_sep = "=",
+    split_into_pages_by_var = "SEX"
+  ) %>%
+    add_listing_col("BMRKR1", format = "xx.x")
+
+  lsting2 <- as_listing(
+    tmp_data,
+    key_cols = "ARM",
+    disp_cols = c("SEX", "USUBJID", "AGE"),
+    add_trailing_sep = "ARM",
+    trailing_sep = "="
+  ) %>%
+    add_listing_col("BMRKR1", format = "xx.x") %>%
+    split_into_pages_by_var("SEX", page_prefix = "SEX")
+
+  # splitting afterwards keeps the same printed trailing separators
+  listing_trailing_sep(lsting2$M) <- listing_trailing_sep(lsting$M)
+  listing_trailing_sep(lsting2$`F`) <- listing_trailing_sep(lsting$`F`)
+  expect_equal(lsting, lsting2)
+
+  # Not possible to guess indexes - error
+  expect_error(
+    lsting2 <- as_listing(
+      tmp_data,
+      key_cols = "ARM",
+      disp_cols = c("SEX", "USUBJID", "AGE"),
+      add_trailing_sep = c(3, 5, 7),
+      trailing_sep = "="
+    ) %>%
+      add_listing_col("BMRKR1", format = "xx.x") %>%
+      split_into_pages_by_var("SEX", page_prefix = "SEX"),
+    "Current lsting did have add_trailing_sep directives with numeric indexes"
+  )
+
+  # Sample snapshot
+  expect_snapshot(lsting2)
 })

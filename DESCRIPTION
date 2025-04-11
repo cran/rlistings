@@ -1,16 +1,19 @@
 Package: rlistings
 Title: Clinical Trial Style Data Readout Listings
-Version: 0.2.10
-Date: 2025-01-07
+Version: 0.2.11
+Date: 2025-04-10
 Authors@R: c(
     person("Gabriel", "Becker", , "gabembecker@gmail.com", role = "aut",
            comment = "original creator of the package"),
     person("Adrian", "Waddell", , "adrian.waddell@gene.com", role = "aut"),
     person("Joe", "Zhu", , "joe.zhu@roche.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7566-2787")),
-    person("Davide", "Garolini", , "davide.garolini@roche.com", role = "aut"),
-    person("Emily", "de la Rua", , "emily.de_la_rua@contractors.roche.com", role = "aut"),
-    person("Abinaya", "Yogasekaram", , "abinaya.yogasekaram@contractors.roche.com", role = "ctb"),
+    person("Davide", "Garolini", , "davide.garolini@roche.com", role = "aut",
+           comment = c(ORCID = "0000-0002-1445-1369")),
+    person("Emily", "de la Rua", , "emily.de_la_rua@contractors.roche.com", role = "aut",
+           comment = c(ORCID = "0009-0000-8738-5561")),
+    person("Abinaya", "Yogasekaram", , "abinaya.yogasekaram@contractors.roche.com", role = "ctb",
+           comment = c(ORCID = "0009-0005-2083-1105")),
     person("F. Hoffmann-La Roche AG", role = c("cph", "fnd"))
   )
 Description: Listings are often part of the submission of clinical trial
@@ -21,7 +24,7 @@ License: Apache License 2.0
 URL: https://insightsengineering.github.io/rlistings/,
         https://github.com/insightsengineering/rlistings/
 BugReports: https://github.com/insightsengineering/rlistings/issues
-Depends: formatters (>= 0.5.10), methods, tibble (>= 2.0.0)
+Depends: formatters (>= 0.5.11), methods, tibble (>= 2.0.0)
 Imports: checkmate (>= 2.1.0), grDevices, grid, stats, utils
 Suggests: dplyr (>= 1.0.2), knitr (>= 1.42), lifecycle (>= 0.2.0),
         rmarkdown (>= 2.23), stringi (>= 1.6), testthat (>= 3.1.5),
@@ -37,14 +40,14 @@ Encoding: UTF-8
 Language: en-US
 RoxygenNote: 7.3.2
 NeedsCompilation: no
-Packaged: 2025-01-09 03:12:09 UTC; rstudio
+Packaged: 2025-04-10 16:10:52 UTC; melkiades
 Author: Gabriel Becker [aut] (original creator of the package),
   Adrian Waddell [aut],
   Joe Zhu [aut, cre] (<https://orcid.org/0000-0001-7566-2787>),
-  Davide Garolini [aut],
-  Emily de la Rua [aut],
-  Abinaya Yogasekaram [ctb],
+  Davide Garolini [aut] (<https://orcid.org/0000-0002-1445-1369>),
+  Emily de la Rua [aut] (<https://orcid.org/0009-0000-8738-5561>),
+  Abinaya Yogasekaram [ctb] (<https://orcid.org/0009-0005-2083-1105>),
   F. Hoffmann-La Roche AG [cph, fnd]
 Maintainer: Joe Zhu <joe.zhu@roche.com>
 Repository: CRAN
-Date/Publication: 2025-01-09 04:40:02 UTC
+Date/Publication: 2025-04-11 11:30:02 UTC

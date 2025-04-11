@@ -16,9 +16,12 @@ as_listing(
   key_cols = names(df)[1],
   disp_cols = NULL,
   non_disp_cols = NULL,
+  sort_cols = key_cols,
   unique_rows = FALSE,
   default_formatting = list(all = fmt_config()),
   col_formatting = NULL,
+  add_trailing_sep = NULL,
+  trailing_sep = " ",
   main_title = NULL,
   subtitles = NULL,
   main_footer = NULL,
@@ -61,6 +64,9 @@ displayed when the listing is rendered. Defaults to all columns of \code{df} not
 \item{non_disp_cols}{(\code{character} or \code{NULL})\cr vector of names of non-key columns to be excluded as display
 columns. All other non-key columns are treated as display columns. Ignored if \code{disp_cols} is non-\code{NULL}.}
 
+\item{sort_cols}{(\code{character} or \code{NULL})\cr vector of names of columns (in order) which should be used to sort the
+listing. Defaults to \code{key_cols}. If \code{NULL}, no sorting will be performed.}
+
 \item{unique_rows}{(\code{flag})\cr whether only unique rows should be included in the listing. Defaults to \code{FALSE}.}
 
 \item{default_formatting}{(\code{list})\cr a named list of default column format configurations to apply when rendering
@@ -74,6 +80,13 @@ and \code{align}.}
 columns when rendering the listing. Each name-value pair consists of a name corresponding to a column name and a
 value of type \code{fmt_config} with the formatting configuration that should be implemented for that column. Objects
 of type \code{fmt_config} can take 3 arguments: \code{format}, \code{na_str}, and \code{align}. Defaults to \code{NULL}.}
+
+\item{add_trailing_sep}{(\code{character} or \code{numeric} or \code{NULL})\cr If it is assigned to one or more column names,
+a trailing separator will be added between groups with identical values for that column. Numeric option allows
+the user to specify in which rows it can be added. Defaults to \code{NULL}.}
+
+\item{trailing_sep}{(\code{character(1)})\cr The separator to be added between groups. The character will be repeated to
+fill the row.}
 
 \item{main_title}{(\code{string} or \code{NULL})\cr the main title for the listing, or \code{NULL} (the default).}
 

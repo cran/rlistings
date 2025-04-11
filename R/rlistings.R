@@ -17,6 +17,8 @@ setOldClass(c("MatrixPrintForm", "list"))
 #'   `non_disp_cols`.
 #' @param non_disp_cols (`character` or `NULL`)\cr vector of names of non-key columns to be excluded as display
 #'   columns. All other non-key columns are treated as display columns. Ignored if `disp_cols` is non-`NULL`.
+#' @param sort_cols (`character` or `NULL`)\cr vector of names of columns (in order) which should be used to sort the
+#'   listing. Defaults to `key_cols`. If `NULL`, no sorting will be performed.
 #' @param unique_rows (`flag`)\cr whether only unique rows should be included in the listing. Defaults to `FALSE`.
 #' @param default_formatting (`list`)\cr a named list of default column format configurations to apply when rendering
 #'   the listing. Each name-value pair consists of a name corresponding to a data class (or "numeric" for all
@@ -28,6 +30,11 @@ setOldClass(c("MatrixPrintForm", "list"))
 #'   columns when rendering the listing. Each name-value pair consists of a name corresponding to a column name and a
 #'   value of type `fmt_config` with the formatting configuration that should be implemented for that column. Objects
 #'   of type `fmt_config` can take 3 arguments: `format`, `na_str`, and `align`. Defaults to `NULL`.
+#' @param add_trailing_sep (`character` or `numeric` or `NULL`)\cr If it is assigned to one or more column names,
+#'   a trailing separator will be added between groups with identical values for that column. Numeric option allows
+#'   the user to specify in which rows it can be added. Defaults to `NULL`.
+#' @param trailing_sep (`character(1)`)\cr The separator to be added between groups. The character will be repeated to
+#'   fill the row.
 #' @param main_title (`string` or `NULL`)\cr the main title for the listing, or `NULL` (the default).
 #' @param subtitles (`character` or `NULL`)\cr a vector of subtitles for the listing, or `NULL` (the default).
 #' @param main_footer (`character` or `NULL`)\cr a vector of main footer lines for the listing, or `NULL` (the default).
@@ -132,14 +139,20 @@ as_listing <- function(df,
                        key_cols = names(df)[1],
                        disp_cols = NULL,
                        non_disp_cols = NULL,
+                       sort_cols = key_cols,
                        unique_rows = FALSE,
                        default_formatting = list(all = fmt_config()),
                        col_formatting = NULL,
+                       add_trailing_sep = NULL,
+                       trailing_sep = " ",
                        main_title = NULL,
                        subtitles = NULL,
                        main_footer = NULL,
                        prov_footer = NULL,
                        split_into_pages_by_var = NULL) {
+  checkmate::assert_multi_class(add_trailing_sep, c("character", "numeric"), null.ok = TRUE)
+  checkmate::assert_string(trailing_sep, n.chars = 1)
+
   if (length(non_disp_cols) > 0 && length(intersect(key_cols, non_disp_cols)) > 0) {
     stop(
       "Key column also listed in non_disp_cols. All key columns are by",
@@ -174,12 +187,28 @@ as_listing <- function(df,
 
   df <- as_tibble(df)
   varlabs <- var_labels(df, fill = TRUE)
-  o <- do.call(order, df[key_cols])
-  if (is.unsorted(o)) {
-    if (interactive()) {
-      message("sorting incoming data by key columns")
+  if (!is.null(sort_cols)) {
+    sort_miss <- setdiff(sort_cols, names(df))
+    if (length(sort_miss) > 0) {
+      stop(
+        "The following columns were specified as sorting columns (sort_cols) but are missing from df: ",
+        paste0("`", sort_miss, "`", collapse = ", ")
+      )
     }
-    df <- df[o, ]
+    o <- do.call(order, df[sort_cols])
+    if (is.unsorted(o)) {
+      if (interactive()) {
+        message(paste(
+          "sorting incoming data by",
+          if (identical(sort_cols, key_cols)) {
+            "key columns"
+          } else {
+            paste0("column", if (length(sort_cols) > 1) "s", " ", paste0("`", sort_cols, "`", collapse = ", "))
+          }
+        ))
+      }
+      df <- df[o, ]
+    }
   }
 
   ## reorder the full set of cols to ensure key columns are first
@@ -240,8 +269,58 @@ as_listing <- function(df,
     df <- split_into_pages_by_var(df, split_into_pages_by_var)
   }
 
+  # add trailing separators to the df object
+  if (!is.null(add_trailing_sep)) {
+    if (class(df)[1] == "list") {
+      df <- lapply(
+        df, .do_add_trailing_sep,
+        add_trailing_sep = add_trailing_sep,
+        trailing_sep = trailing_sep
+      )
+    } else {
+      df <- .do_add_trailing_sep(df, add_trailing_sep, trailing_sep)
+    }
+  }
+
   df
 }
+
+# Helper function to add trailing separators to the dataframe
+.do_add_trailing_sep <- function(df_tmp, add_trailing_sep, trailing_sep) {
+  if (is.character(add_trailing_sep)) {
+    if (!all(add_trailing_sep %in% names(df_tmp))) {
+      stop(
+        "The column specified in `add_trailing_sep` does not exist in the dataframe."
+      )
+    }
+    row_ind_for_trail_sep <- apply(
+      apply(as.data.frame(df_tmp)[, add_trailing_sep, drop = FALSE], 2, function(col_i) {
+        diff(as.numeric(as.factor(col_i)))
+      }),
+      1, function(row_i) any(row_i != 0)
+    ) %>%
+      which()
+    listing_trailing_sep(df_tmp) <- list(
+      "var_trailing_sep" = add_trailing_sep,
+      "where_trailing_sep" = row_ind_for_trail_sep,
+      "what_to_separe" = trailing_sep
+    )
+  } else if (is.numeric(add_trailing_sep)) {
+    if (any(!add_trailing_sep %in% seq_len(nrow(df_tmp)))) {
+      stop(
+        "The row indices specified in `add_trailing_sep` are not valid."
+      )
+    }
+    listing_trailing_sep(df_tmp) <- list(
+      "var_trailing_sep" = NULL, # If numeric only
+      "where_trailing_sep" = add_trailing_sep,
+      "what_to_separe" = trailing_sep
+    )
+  }
+
+  df_tmp
+}
+
 
 #' @export
 #' @rdname listings
@@ -284,7 +363,12 @@ get_keycols <- function(df) {
 #' @export
 setMethod(
   "matrix_form", "listing_df",
-  rix_form <- function(obj, indent_rownames = FALSE, expand_newlines = TRUE, fontspec = font_spec, col_gap = 3L) {
+  rix_form <- function(obj,
+                       indent_rownames = FALSE,
+                       expand_newlines = TRUE,
+                       fontspec = font_spec,
+                       col_gap = 3L,
+                       round_type = c("iec", "sas")) {
     ##  we intentionally silently ignore indent_rownames because listings have
     ## no rownames, but formatters::vert_pag_indices calls matrix_form(obj, TRUE)
     ## unconditionally.
@@ -306,7 +390,11 @@ setMethod(
     for (i in seq_along(keycols)) {
       kcol <- keycols[i]
       kcolvec <- listing[[kcol]]
-      kcolvec <- vapply(kcolvec, format_value, "", format = obj_format(kcolvec), na_str = obj_na_str(kcolvec))
+      kcolvec <- vapply(kcolvec, format_value, "",
+        format = obj_format(kcolvec),
+        na_str = obj_na_str(kcolvec),
+        round_type = round_type
+      )
       curkey <- paste0(curkey, kcolvec)
       disp <- c(TRUE, tail(curkey, -1) != head(curkey, -1))
       bodymat[disp, kcol] <- kcolvec[disp]
@@ -316,7 +404,11 @@ setMethod(
     if (length(nonkeycols) > 0) {
       for (nonk in nonkeycols) {
         vec <- listing[[nonk]]
-        vec <- vapply(vec, format_value, "", format = obj_format(vec), na_str = obj_na_str(vec))
+        vec <- vapply(vec, format_value, "",
+          format = obj_format(vec),
+          na_str = obj_na_str(vec),
+          round_type = round_type
+        )
         bodymat[, nonk] <- vec
       }
     }
@@ -342,6 +434,16 @@ setMethod(
       )
     }
 
+    # trailing sep setting
+    row_info <- make_row_df(obj, fontspec = fontspec)
+    if (!is.null(listing_trailing_sep(obj))) {
+      lts <- listing_trailing_sep(obj)
+
+      # We need to make sure that the trailing separator is not beyond the number of rows (cases like head())
+      lts$where_trailing_sep <- lts$where_trailing_sep[lts$where_trailing_sep <= nrow(row_info)]
+      row_info$trailing_sep[lts$where_trailing_sep] <- lts$what_to_separe
+    }
+
     MatrixPrintForm(
       strings = fullmat,
       spans = matrix(1,
@@ -355,7 +457,7 @@ setMethod(
         ncol = ncol(fullmat)
       ),
       listing_keycols = keycols, # It is always something
-      row_info = make_row_df(obj, fontspec = fontspec),
+      row_info = row_info,
       nlines_header = 1, # We allow only one level of headers and nl expansion happens after
       nrow_header = 1,
       has_topleft = FALSE,
@@ -408,6 +510,25 @@ add_listing_dispcol <- function(df, new) {
   attr(df, "listing_dispcols") <- unique(value)
   df
 }
+#' @keywords internal
+listing_trailing_sep <- function(df) attr(df, "listing_trailing_sep") %||% NULL
+
+# xxx @param value (`list`)\cr List of names or rows to be separated and their separator.
+#'
+#' @keywords internal
+`listing_trailing_sep<-` <- function(df, value) {
+  checkmate::assert_list(value, len = 3, null.ok = TRUE)
+  if (is.null(value)) {
+    attr(df, "listing_trailing_sep") <- NULL
+    return(df)
+  }
+  checkmate::assert_set_equal(
+    names(value),
+    c("var_trailing_sep", "where_trailing_sep", "what_to_separe")
+  )
+  attr(df, "listing_trailing_sep") <- value
+  df
+}
 
 #' @inheritParams formatters::fmt_config
 #' @param name (`string`)\cr name of the existing or new column to be
@@ -427,6 +548,14 @@ add_listing_col <- function(df,
                             format = NULL,
                             na_str = "NA",
                             align = "left") {
+  if (class(df)[1] == "list") {
+    out <- lapply(
+      df, add_listing_col,
+      name = name, fun = fun, format = format, na_str = na_str, align = align
+    )
+    return(out)
+  }
+
   if (!is.null(fun)) {
     vec <- with_label(fun(df), name)
   } else if (name %in% names(df)) {
@@ -504,6 +633,20 @@ split_into_pages_by_var <- function(lsting, var, page_prefix = var) {
     var_desc <- paste0(page_prefix, ": ", lvl)
     lsting_by_var[[lvl]] <- lsting[lsting[[var]] == lvl, ]
     subtitles(lsting_by_var[[lvl]]) <- c(subtitles(lsting), var_desc)
+  }
+
+  # Correction for cases with trailing separators
+  if (!is.null(listing_trailing_sep(lsting))) {
+    trailing_sep_directives <- listing_trailing_sep(lsting)
+    if (is.null(trailing_sep_directives$var_trailing_sep)) {
+      stop(
+        "Current lsting did have add_trailing_sep directives with numeric indexes. ",
+        "This is not supported for split_into_pages_by_var. Please use the <var> method."
+      )
+    }
+    add_trailing_sep <- trailing_sep_directives$var_trailing_sep
+    trailing_sep <- trailing_sep_directives$trailing_sep
+    lsting_by_var <- lapply(lsting_by_var, .do_add_trailing_sep, add_trailing_sep, trailing_sep)
   }
 
   lsting_by_var

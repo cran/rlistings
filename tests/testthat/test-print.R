@@ -3,6 +3,10 @@ testthat::test_that("Listing print correctly", {
     add_listing_col("ARM")
 
   res <- strsplit(toString(matrix_form(lsting), hsep = "-"), "\\n")[[1]]
+  ## regression
+  printout <- capture.output(print(lsting, hsep = "-"))
+  testthat::expect_false(any(grepl("iec", printout, fixed = TRUE)))
+  testthat::expect_identical(res, printout)
 
   testthat::expect_snapshot(res)
 })
@@ -159,4 +163,106 @@ testthat::test_that("listings supports wrapping", {
 
   # Fix C stack inf rec loop
   testthat::expect_silent(toString(lsting, widths = c(10, 10, 1)))
+})
+
+
+testthat::test_that("sas rounding support", {
+  df <- data.frame(id = 1:3 + 0.845, value = 0.845)
+  lsting <- as_listing(df, key_cols = "id", default_formatting = list(all = fmt_config("xx.xx")))
+  txt1 <- export_as_txt(lsting)
+  txtlns1 <- strsplit(txt1, "\n", fixed = TRUE)[[1]]
+  expect_true(all(grepl(".*84.*84 $", txtlns1[3:5])))
+  expect_false(any(grepl("85", txtlns1)))
+  txt2 <- export_as_txt(lsting, round_type = "sas")
+  txtlns2 <- strsplit(txt2, "\n", fixed = TRUE)[[1]]
+  expect_true(all(grepl(".*85.*85 $", txtlns2[3:5])))
+  expect_false(any(grepl("84", txtlns2)))
+  expect_identical(
+    export_as_txt(lsting, round_type = "sas"),
+    toString(lsting, round_type = "sas")
+  )
+})
+
+testthat::test_that("listings supports horizontal separators", {
+  result <- as_listing(
+    df = ex_adae,
+    disp_cols = c("ARM"),
+    key_cols = c("USUBJID", "AETOXGR"),
+    add_trailing_sep = c("ARM", "AETOXGR"), # columns
+    trailing_sep = "k"
+  )
+  result <- head(result, 15)
+
+  expect_equal(
+    sum(
+      sapply(
+        strsplit(toString(result), "\n")[[1]],
+        function(x) {
+          x == paste0(rep(substr(x, 1, 1), nchar(x)), collapse = "")
+        },
+        USE.NAMES = FALSE
+      )
+    ),
+    9
+  )
+
+  # numeric values
+  result <- as_listing(
+    df = ex_adae,
+    disp_cols = c("ARM"),
+    key_cols = c("USUBJID", "AETOXGR"),
+    add_trailing_sep = c(1, 2),
+    trailing_sep = "k"
+  )
+  result <- head(result, 15)
+
+  expect_equal(
+    sum(
+      sapply(
+        strsplit(toString(result), "\n")[[1]],
+        function(x) {
+          x == paste0(rep(substr(x, 1, 1), nchar(x)), collapse = "")
+        },
+        USE.NAMES = FALSE
+      )
+    ),
+    2 + 1 # there is the bar too
+  )
+
+
+  # Some errors
+  expect_error(
+    result <- as_listing(
+      df = ex_adae,
+      add_trailing_sep = c(-1, 2),
+      trailing_sep = "k"
+    ),
+    "The row indices specified in `add_trailing_sep` are not valid"
+  )
+
+  expect_error(
+    result <- as_listing(
+      df = ex_adae,
+      add_trailing_sep = c(1, 2),
+      trailing_sep = "more values"
+    ),
+    "All elements must have exactly 1 characters"
+  )
+
+  expect_error(
+    result <- as_listing(
+      df = ex_adae,
+      add_trailing_sep = "not present"
+    ),
+    "does not exist in the dataframe"
+  )
+
+  # snapshot
+  expect_snapshot(
+    as_listing(
+      df = data.frame(one_col = c("aa", "aa", "b")),
+      key_cols = "one_col",
+      add_trailing_sep = "one_col", trailing_sep = "+"
+    )
+  )
 })
