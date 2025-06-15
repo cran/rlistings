@@ -1,6 +1,14 @@
 setOldClass(c("listing_df", "tbl_df", "tbl", "data.frame"))
 setOldClass(c("MatrixPrintForm", "list"))
 
+no_spans_df <- data.frame(
+  span_level = numeric(),
+  label = character(),
+  start = numeric(),
+  span = numeric(),
+  stringsAsFactors = FALSE
+)
+
 #' Create a listing from a `data.frame` or `tibble`
 #'
 #' @description `r lifecycle::badge("experimental")`
@@ -30,6 +38,8 @@ setOldClass(c("MatrixPrintForm", "list"))
 #'   columns when rendering the listing. Each name-value pair consists of a name corresponding to a column name and a
 #'   value of type `fmt_config` with the formatting configuration that should be implemented for that column. Objects
 #'   of type `fmt_config` can take 3 arguments: `format`, `na_str`, and `align`. Defaults to `NULL`.
+#' @param align_colnames (`flag`)\cr whether the column titles should have the same alignment as their columns. All
+#'   titles default to `"center"` alignment if `FALSE` (default). This can be changed with `align_colnames()`.
 #' @param add_trailing_sep (`character` or `numeric` or `NULL`)\cr If it is assigned to one or more column names,
 #'   a trailing separator will be added between groups with identical values for that column. Numeric option allows
 #'   the user to specify in which rows it can be added. Defaults to `NULL`.
@@ -44,6 +54,9 @@ setOldClass(c("MatrixPrintForm", "list"))
 #'   into pages, with each page corresponding to one unique value/level of the variable. See
 #'   [split_into_pages_by_var()] for more details.
 #' @param vec (`string`)\cr name of a column vector from a `listing_df` object to be annotated as a key column.
+#' @param spanning_col_labels (`data.frame`)\cr A data.frame with the columns
+#'   `span_level`, `label`, `start`, and `span` defining 0 or more levels of
+#'   addition spanning (ie grouping) of columns. Defaults to no additional spanning labels.
 #'
 #' @return A `listing_df` object, sorted by its key columns.
 #'
@@ -76,6 +89,22 @@ setOldClass(c("MatrixPrintForm", "list"))
 #' Columns in the underlying data which are neither key nor display columns remain
 #' within the object available for computations but *are not rendered during
 #' printing or export of the listing*.
+#'
+#' Spanning column labels are displayed centered above the individual labels
+#' of the columns they span across. `span_level` 1 is placed directly above
+#' the column labels, with higher "span_levels` displayed above it in ascending
+#' order.
+#'
+#' IF spanning column labels are present, a single spanning label cannot span
+#' across both key and non-key displayed columns simultaneously due to key
+#' columns' repetition after page breaks during horizontal pagination. Attempting
+#' to set a spanning column label which does so will result in an error.
+#'
+#' @note Unlike in the `rtables` sister package, spanning labels here are purely
+#' decorative and do not reflect any structure among the columns modeled by
+#' `rlistings`. Thus, we cannot, e.g., use pathing to select columns under
+#' a certain spanning column label, or restrict horizontal pagination to
+#' leave 'groups' of columns implied by a spanning label intact.
 #'
 #' @examples
 #' dat <- ex_adae
@@ -143,13 +172,15 @@ as_listing <- function(df,
                        unique_rows = FALSE,
                        default_formatting = list(all = fmt_config()),
                        col_formatting = NULL,
+                       align_colnames = FALSE,
                        add_trailing_sep = NULL,
                        trailing_sep = " ",
                        main_title = NULL,
                        subtitles = NULL,
                        main_footer = NULL,
                        prov_footer = NULL,
-                       split_into_pages_by_var = NULL) {
+                       split_into_pages_by_var = NULL,
+                       spanning_col_labels = no_spans_df) {
   checkmate::assert_multi_class(add_trailing_sep, c("character", "numeric"), null.ok = TRUE)
   checkmate::assert_string(trailing_sep, n.chars = 1)
 
@@ -254,6 +285,10 @@ as_listing <- function(df,
     df[[col]]
   })
 
+  # Check and set align_colnames
+  checkmate::assert_flag(align_colnames)
+  align_colnames(df) <- align_colnames
+
   if (unique_rows) df <- df[!duplicated(df[, cols]), ]
 
   class(df) <- c("listing_df", class(df))
@@ -264,6 +299,7 @@ as_listing <- function(df,
   subtitles(df) <- subtitles
   prov_footer(df) <- prov_footer
   listing_dispcols(df) <- cols
+  spanning_col_label_df(df) <- spanning_col_labels
 
   if (!is.null(split_into_pages_by_var)) {
     df <- split_into_pages_by_var(df, split_into_pages_by_var)
@@ -319,6 +355,50 @@ as_listing <- function(df,
   }
 
   df_tmp
+}
+
+#' @export
+#' @rdname listings
+spanning_col_label_df <- function(df) {
+  ret <- attr(df, "colspan_label_df")
+  if (is.null(ret)) {
+    ret <- no_spans_df
+  }
+  ret
+}
+
+#' @export
+#' @rdname listings
+`spanning_col_label_df<-` <- function(df, value) {
+  if (is.null(value))
+    value <- no_spans_df
+
+  checkmate::assert_data_frame(value, min.cols = 4, max.cols = 4, col.names = "named")
+  checkmate::assert_set_equal(names(value), c("span_level", "label", "start", "span"))
+  if (NROW(value)) {
+    ## can't have spanning labels that span across both key and non-key cols
+    ## because then what would we do after horizontal pagination???
+    ## not clear people should *really* be horizontally paginatting listings
+    ## but we support it so here we are...
+
+    nkeycols <- length(get_keycols(df))
+    badrow_lgl <- nzchar(value$label) &
+      value$start <= nkeycols &
+      value$start + value$span - 1 > nkeycols
+    if (any(badrow_lgl)) {
+      badrow <- value[which(badrow_lgl)[1], ]
+      stop(
+        "A spanning column label cannot span across both key and non-key displayed columns of a listing.\n",
+        "First issue - span_level: ", badrow$span_level,
+        " label: ", badrow$label,
+        " start: ", badrow$start,
+        "cols spanned: ", badrow$span,
+        " key columns: ", nkeycols
+      )
+    }
+  }
+  attr(df, "colspan_label_df") <- value
+  df
 }
 
 
@@ -418,9 +498,15 @@ setMethod(
       bodymat
     )
 
+    col_alignment_values <- sapply(listing, obj_align)
+    colnames_align <- if (isFALSE(align_colnames(obj))) {
+      rep("center", length(cols))
+    } else {
+      col_alignment_values
+    }
     colaligns <- rbind(
-      rep("center", length(cols)),
-      matrix(sapply(listing, obj_align),
+      unname(colnames_align),
+      matrix(col_alignment_values,
         ncol = length(cols),
         nrow = nrow(fullmat) - 1,
         byrow = TRUE
@@ -444,22 +530,35 @@ setMethod(
       row_info$trailing_sep[lts$where_trailing_sep] <- lts$what_to_separe
     }
 
+    span_hdr <- make_span_hdr_mats(spanning_col_label_df(obj), length(listing_dispcols(obj)))
+    span_hdr_mat <- span_hdr$strings
+    span_hdr_spans <- span_hdr$spans
+
     MatrixPrintForm(
-      strings = fullmat,
-      spans = matrix(1,
-        nrow = nrow(fullmat),
-        ncol = ncol(fullmat)
+      strings = rbind(
+        span_hdr_mat,
+        fullmat
+      ),
+      spans = rbind(
+        span_hdr_spans,
+        matrix(1,
+          nrow = nrow(fullmat),
+          ncol = ncol(fullmat)
+        )
       ),
       ref_fnotes = list(),
-      aligns = colaligns,
+      aligns = rbind(
+        matrix("center", nrow = NROW(span_hdr_mat), ncol = ncol(fullmat)),
+        colaligns
+      ),
       formats = matrix(1,
-        nrow = nrow(fullmat),
+        nrow = nrow(fullmat) + NROW(span_hdr_mat),
         ncol = ncol(fullmat)
       ),
       listing_keycols = keycols, # It is always something
       row_info = row_info,
-      nlines_header = 1, # We allow only one level of headers and nl expansion happens after
-      nrow_header = 1,
+      nlines_header = 1 + nrow(span_hdr_mat),
+      nrow_header = 1 + nrow(span_hdr_mat),
       has_topleft = FALSE,
       has_rowlabs = FALSE,
       expand_newlines = expand_newlines,
@@ -474,6 +573,41 @@ setMethod(
     )
   }
 )
+
+make_span_hdr_mats <- function(spandf, ncol) {
+  if (NROW(spandf) == 0) {
+    return(list(
+      strings = matrix("", ncol = ncol, nrow = 0),
+      spans = matrix(1, ncol = ncol, nrow = 0)
+    ))
+  }
+
+  spldf <- split(spandf, spandf$span_level)
+  ## "span_level" 1 should be directly above col lables, ie last
+  res_mats <- rev(lapply(spldf, handle_one_lblspan_row, ncol = ncol))
+  list(
+    strings = do.call(
+      rbind,
+      lapply(seq_along(res_mats), function(i) res_mats[[i]]$strings)
+    ),
+    spans = do.call(
+      rbind,
+      lapply(seq_along(res_mats), function(i) res_mats[[i]]$spans)
+    )
+  )
+}
+
+handle_one_lblspan_row <- function(df, ncol) {
+  strings <- matrix("", nrow = 1, ncol = ncol)
+  spans <- matrix(1, nrow = 1, ncol = ncol)
+  for (i in seq_len(nrow(df))) {
+    spanlen <- df[i, "span", drop = TRUE]
+    spaninds <- seq(df[i, "start", drop = TRUE], length.out = spanlen)
+    strings[1, spaninds] <- df[i, "label", drop = TRUE]
+    spans[1, spaninds] <- spanlen
+  }
+  list(strings = strings, spans = spans)
+}
 
 #' @export
 #' @rdname listings
@@ -510,6 +644,21 @@ add_listing_dispcol <- function(df, new) {
   attr(df, "listing_dispcols") <- unique(value)
   df
 }
+
+#' @export
+#' @rdname listings
+align_colnames <- function(df) attr(df, "align_colnames") %||% FALSE
+
+#' @param value (`string`)\cr new value.
+#'
+#' @export
+#' @rdname listings
+`align_colnames<-` <- function(df, value) {
+  checkmate::assert_flag(value)
+  attr(df, "align_colnames") <- value
+  df
+}
+
 #' @keywords internal
 listing_trailing_sep <- function(df) attr(df, "listing_trailing_sep") %||% NULL
 
@@ -633,6 +782,7 @@ split_into_pages_by_var <- function(lsting, var, page_prefix = var) {
     var_desc <- paste0(page_prefix, ": ", lvl)
     lsting_by_var[[lvl]] <- lsting[lsting[[var]] == lvl, ]
     subtitles(lsting_by_var[[lvl]]) <- c(subtitles(lsting), var_desc)
+    spanning_col_label_df(lsting_by_var[[lvl]]) <- spanning_col_label_df(lsting)
   }
 
   # Correction for cases with trailing separators

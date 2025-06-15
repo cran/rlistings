@@ -1,7 +1,7 @@
 Package: rlistings
 Title: Clinical Trial Style Data Readout Listings
-Version: 0.2.11
-Date: 2025-04-10
+Version: 0.2.12
+Date: 2025-05-28
 Authors@R: c(
     person("Gabriel", "Becker", , "gabembecker@gmail.com", role = "aut",
            comment = "original creator of the package"),
@@ -40,14 +40,15 @@ Encoding: UTF-8
 Language: en-US
 RoxygenNote: 7.3.2
 NeedsCompilation: no
-Packaged: 2025-04-10 16:10:52 UTC; melkiades
+Packaged: 2025-06-13 16:02:38 UTC; melkiades
 Author: Gabriel Becker [aut] (original creator of the package),
   Adrian Waddell [aut],
-  Joe Zhu [aut, cre] (<https://orcid.org/0000-0001-7566-2787>),
-  Davide Garolini [aut] (<https://orcid.org/0000-0002-1445-1369>),
-  Emily de la Rua [aut] (<https://orcid.org/0009-0000-8738-5561>),
-  Abinaya Yogasekaram [ctb] (<https://orcid.org/0009-0005-2083-1105>),
+  Joe Zhu [aut, cre] (ORCID: <https://orcid.org/0000-0001-7566-2787>),
+  Davide Garolini [aut] (ORCID: <https://orcid.org/0000-0002-1445-1369>),
+  Emily de la Rua [aut] (ORCID: <https://orcid.org/0009-0000-8738-5561>),
+  Abinaya Yogasekaram [ctb] (ORCID:
+    <https://orcid.org/0009-0005-2083-1105>),
   F. Hoffmann-La Roche AG [cph, fnd]
 Maintainer: Joe Zhu <joe.zhu@roche.com>
 Repository: CRAN
-Date/Publication: 2025-04-11 11:30:02 UTC
+Date/Publication: 2025-06-15 14:30:02 UTC
